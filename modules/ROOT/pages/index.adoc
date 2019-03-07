@@ -1,0 +1,68 @@
+= Anypoint MQ
+ifndef::env-site,env-github[]
+include::_attributes.adoc[]
+endif::[]
+
+Anypoint MQ は、顧客がアプリケーション間で高度な非同期メッセージングシナリオを実行できる、マルチテナントのクラウドメッセージングサービスです。Anypoint MQ は、Anypoint Platform と完全に統合されており、ロールベースのアクセス制御、クライアントアプリケーション管理、およびコネクタを提供します。
+
+*参照:* xref:mq-connectors.adoc[MQ コネクタ]、xref:mq-faq.adoc[MQ FAQ] および
+xref:release-notes::mq/anypoint-mq-release-notes.adoc[リリースノート]。
+
+*注意:* Anypoint MQ は CloudHub Insight または Anypoint Monitoring との併用をサポートしません。代わりに、xref:mq-usage.adoc[MQ 使用量グラフ]を使用してコンシュームされたデータと API 要求、および受信したメッセージ単位数を表示するか、xref:mq-apis.adoc#mqstatapi[MQ Stats API] を使用してキューのパフォーマンスの統計分析を実行できます。
+
+== Anypoint MQ ドキュメント
+
+[%header%autowidth.spread]
+|===
+|ガイド|説明
+|xref:mq-understanding.adoc[MQ の用語] |MQ の用語について説明します。
+|xref:mq-faq.adoc[FAQ: Anypoint MQ] |よくある質問と回答。
+|xref:mq-understanding.adoc[MQ コネクタ] |MQ コネクタと Anypoint Exchange へのリンク。
+|xref:mq-tutorial.adoc[チュートリアル: キューおよびメッセージ交換の作成] |キュー、クライアントアプリケーションの作成手順の説明、Anypoint Studio のセットアップ、メッセージの送受信。このチュートリアルでは、メッセージ交換も追加し、キューとの違いを示します。
+|xref:mq-access-management.adoc[環境、ユーザ、およびロールのアクセス権の設定] |MQ 環境、ユーザ、およびロールのアクセス権を割り当てます。
+|xref:mq-queues.adoc[キューの設定] |Anypoint Platform を使用してキューを作成し、キューにメッセージを送信し、キューからメッセージを取得します。このトピックでは、xref:mq-queues.adoc#about-dead-letter-queues[デッドレターキュー]およびxref:mq-queues.adoc#fifoqueues[FIFO キュー]についても説明します。
+|xref:mq-exchanges.adoc[メッセージ交換の設定] |メッセージ交換に
+メッセージを送信し、キュー内のメッセージを表示する方法について説明します。また、キューをメッセージ交換にバインドする方法、およびメッセージ交換から
+キューをバインド解除する方法についても説明します。
+|xref:mq-client-apps.adoc[クライアントアプリケーションの設定] |Anypoint MQ に
+アプリケーションを登録する方法、およびアプリケーションのクライアント ID と
+クライアントシークレットを表示およびコピーする方法について説明します。
+|xref:mq-apis.adoc[MQ REST API] |REST を使用して Anypoint MQ 機能にアクセスします。REST API を使用して xref:mq-apis.adoc#to-create-a-fifo-queue-from-the-administration-portal[FIFO キューを作成する方法] に関するセクションが含まれます。
+|xref:mq-usage.adoc[使用量グラフの表示] |Anypoint Platform の [Access Management (アクセス管理)] セクションから MQ 使用量情報を表示する方法について説明します。
+|xref:mq-ack-mode.adoc[メッセージの肯定応答] |グローバルとローカルの ACK および NACK 状態について説明します。
+|xref:release-notes::mq/anypoint-mq-release-notes.adoc[リリースノート] |Anypoint MQ Cloud および Anypoint MQ コネクタ製品のリリース情報を要約しています。
+|===
+
+== Anypoint MQ ワークフロー
+
+Anypoint MQ を使用するときに参照できる手順。これと同じワークフローがxref:mq-tutorial.adoc[「Anypoint MQ チュートリアル」]に記載されています。
+
+Anypoint MQ をインストールして設定します。
+
+. Enterprise Mule のログイン情報を使用して Anypoint Platform にログインし、[MQ] をクリックします。
+. [Access Management (アクセス管理)] > [Users (ユーザ)] または [Roles (ロール)] をクリックし、MQ ユーザまたはロールを作成します。
+. MQ から、xref:mq-queues.adoc[キュー]、xref:mq-exchanges.adoc[メッセージ交換]、または xref:mq-queues.adoc#fifoqueues[FIFO キュー]を作成します。
+. 詳細でキューまたはメッセージ交換名をクリックし、[Message Sender (メッセージ送信側)] にアクセスしてメッセージをキューまたはメッセージ交換に送信し、[Message Browser (メッセージブラウザ)] を使用してキューからメッセージを取得します。
+. MQ から、[Client Apps (クライアントアプリケーション)] をクリックしてアプリケーションを登録します。アプリケーションのクライアント ID とクライアントシークレットを参照できます。
+
+Anypoint Studio で、次の手順を実行します。
+
+. Anypoint Exchange を使用して MQ コネクタをインストールします。
+. [HTTP connector (HTTP コネクタ)]、[Anypoint MQ connector (Anypoint MQ コネクタ)]、[Set Payload (ペイロードを設定)]、[Logger (ロガー)] などの必要なビルディングブロックを使用して、新しい Mule プロジェクトを作成します。
+. Anypoint MQ コネクタを設定して、アプリケーションのクライアント ID とクライアントシークレットを指定します。
+. MQ コネクタの *[Operation (操作)]* を設定してメッセージをパブリッシュまたはコンシュームするか、手動で [ack] (メッセージを受け入れる) か [nack] (メッセージを受け入れない) を選択します。ack または nack の代わりに、Anypoint MQ ではxref:mq-ack-mode.adoc[自動肯定応答モード]を使用できます。[Operation (操作)] を [publish (パブリッシュ)] に設定した場合、[Destination (宛先)] を Anypoint Platform で作成したキューまたはメッセージ交換の名前に設定します。[Operation (操作)] を [consume (コンシューム)] に設定した場合、メッセージの受信元となるキューの名前を指定します。
+. Mule アプリケーションを実行します。
+
+テスト:
+
+. Curl や Postman などの REST クライアントを使用して、メッセージを送受信します。
++
+Anypoint MQ アプリケーションは、指定されたキューまたはメッセージ交換に文字列をメッセージとして送信します。
++
+. メッセージをブラウザまたは Studio コンソールで表示します。
+
+== 関連情報
+
+* https://support.mulesoft.com/s/global-search/anypoint%20mq[Anypoint MQ のサポート知識ベース]
+* xref:access-management::audit-logging.adoc#to-query-audit-logging-for-anypoint-mq[MQ 監査ログ]
+* xref:mq-queues.adoc#fifoqueues[FIFO キュー]

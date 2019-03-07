@@ -1,0 +1,124 @@
+= 環境、ユーザ、およびロールのアクセス権の設定
+ifndef::env-site,env-github[]
+include::_attributes.adoc[]
+endif::[]
+:keywords: MQ, アクセス権, ロール, 環境, Anypoint Platform
+
+Anypoint Platform では、組織の Anypoint Platform で MQ 機能を管理する担当者のxref:access-management::managing-permissions.adoc[ロール]を管理できます。
+
+== 環境の作成
+
+自分に MQ アクセス権を付与する前に、権限を関連付ける環境が必要です。
+
+. Anypoint Platform にログインします。
+. 左側のナビゲーションバーから *[Access Management (アクセス管理)]* をクリックするか、Anypoint Platform メイン画面から *[Access Management (アクセス管理)]* をクリックします。
+. 左側の [Access Management (アクセス管理)] の選択肢から *[Environments (環境)]* をクリックし、*[Add environment (環境を追加)]* をクリックします。
++
+image::mq-add-env.png[]
++
+. [Add Environment (環境を追加)] 画面で環境の名前を入力し、[Production (本番)] または [Sandbox] をクリックします。それぞれに個別の環境を作成することをお勧めします。Sandbox はアプリケーションのテストに使用され、本番は一般公開されます。このチュートリアルでは、*[Production (本番)]* を選択できます。
++
+image::mq-create-env.png[]
+
+== ユーザへの MQ アクセス権の付与
+
+最初に自分に MQ アクセス権を付与してから、組織内の他のユーザにアクセス権を付与します。
+
+MQ で使用するユーザ権限を自分に割り当てます。これらの権限により、キューと交換を作成してクライアントアプリケーションと宛先を作成できます。この同じ情報を使用して、組織内の他のユーザにユーザ権限を割り当てることができます。
+
+ユーザ権限を割り当てる手順は、次のとおりです。
+
+. Anypoint Platform で、[Access Management (アクセス管理)]、[Users (ユーザ)] の順にクリックします。
+. ユーザ名の値をクリックします。
++
+image::mq-am-users.png[]
++
+. *[MQ]* をクリックして環境と権限を設定します。権限では、*[すべて選択]* をクリックしてすべての権限を設定するか、*[選択解除]* をクリックして以前にクリックした設定を解除できます。
++
+image::mq-acc-mgmt-user-detail.png[]
++
+. 青いプラスアイコンをクリックして設定を保存します。
++
+image::mq-blue-plus-circle.png[]
++
+概要リストが表示されます。
++
+image::mq-perms-display.png[]
++
+必要に応じて、この表示を使用して権限を削除できます。
+
+== 管理者ロールの作成
+
+組織内の他のユーザに適用可能なロールを作成できます。
+このチュートリアルの完了にロールは必要ありませんが、MQ を管理者または開発者として使用する場合は、
+組織内で MQ を使用するすべてのユーザのロールを作成する必要があります。
+
+ロールを作成すると、管理者、開発者、または情報の参照のみ必要で変更は行わないユーザなど、組織内のユーザにアクセス権を割り当てることができます。
+
+. Anypoint Platform で、[Access Management (アクセス管理)]、[Roles (ロール)] の順にクリックします。
+. [Add Role (ロールを追加)] をクリックします。
++
+image::mq-roles-add-role.png[]
++
+. ロール `Admin Role` に名前を付け、*[ロールを追加]* ボタンをクリックします。
+. ロール名をクリックして *[MQ]* をクリックします。
+. *[Production (本番)]* 環境を指定し、*[Select All (すべて選択)]* をクリックしてすべての権限を設定します。
++
+image::mq-admin-role-detail.png[]
++
+. 青いプラスボタンをクリックして設定を保存します。Anypoint Platform に設定が表示されます。
+
+次の設定があります。
+
+* Clear destinations (宛先のクリア): [View destinations (宛先の参照)] と同じ権限に加えて、メッセージを消去できます。
+* Manage clients (クライアントの管理): [View clients (クライアントの参照)] と同じ権限に加えて、クライアントアプリケーションを作成できます。
+* Manage destinations (宛先の管理): [View destinations (宛先の参照)] および [Clear destinations (宛先のクリア)] と同じ権限に加えて、新しいキューとメッセージ交換の作成、既存のキューとメッセージ交換の編集、[Message Sender (メッセージ送信側)] と [Message Browser (メッセージブラウザ)] ページへのアクセスを行い、削除することもできます。
+* View destinations (宛先の参照): すべての宛先とその設定 ([ID]、[Type (種別)]、[Default TTL (デフォルトの TTL)]、[Default Lock TTL (デフォルトのロック TTL)])、「キュー待機中」メッセージ、「インフライト」メッセージを参照できます。
+* View clients (クライアントの参照): すべてのクライアントアプリケーションとそのクライアントアプリケーション ID およびシークレットを参照できます。
+
+
+=== MQ にアクセスするその他のロールの追加
+
+管理者ロールを作成したら、必要に応じて、Anypoint Platform で Anypoint MQ へのアクセスが必要な組織内のユーザに対して他のロールを作成できます。
+
+. 左側のナビゲーションバーまたはメイン画面から、*[Access Management (アクセス管理)]* をクリックします。
+. *[Roles (ロール)]*、*[Add role (ロールを追加)]* の順にクリックします。
++
+image::mq-roles-add-role.png[]
++
+. ロールの名前と説明を入力して *[Add role (ロールを追加)]* をクリックします。
++
+image::mq-add-role-edit-fields.png[]
++
+. ロールのリストで、作成したロールの名前をクリックします。
++
+image::mq-roles-list.png[]
++
+. *[MQ]* をクリックして環境と権限を設定します。権限では、*[すべて選択]* をクリックしてすべての権限を設定するか、*[選択解除]* をクリックして以前にクリックした設定を解除できます。
++
+image::mq-acc-mgmt-user-detail.png[]
++
+. 青いプラスアイコンをクリックして設定を保存します。
++
+image::mq-blue-plus-circle.png[]
++
+概要リストが表示されます。
++
+image::mq-perms-display.png[]
++
+必要に応じてこの表示を使用して権限を削除するか、ロールを削除できます。
++
+エントリのチェックボックスをクリックしてから *[Delete role (ロールを削除)]* をクリックして、[Roles (ロール)] リストページからロールを削除することもできます。
++
+image::mq-delete-role.png[]
+
+== 環境の切り替え
+
+. MQ で、[本番]: image:mq-production-button.png[] をクリックします。
+. [Switch Environment (環境の切り替え)] で、別の環境の名前、
+たとえば [Sandbox] (以前に Sandbox 環境を作成している場合) をクリックし、[Switch (切り替え)] をクリックします。
+. デフォルトの環境を変更するには、[Open Your Profile To Change The Default Environment (プロファイルを開いてデフォルト環境を変更)] をクリックします。[Default Environment (デフォルト環境)] を別の環境に設定します。
+
+== 関連情報
+
+* xref:mq-faq.adoc[MQ FAQ]
