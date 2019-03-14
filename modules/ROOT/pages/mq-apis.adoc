@@ -85,7 +85,7 @@ image::mq-rest-admin-portal.png[]
 [listing]
 /organizations/{organizationId}/environments/{environmentId}/regions/{regionId}/destinations/queues/{queueId}
 
-次のボディを使用します。
+次の body を使用します。
 
 [source,json,linenums]
 ----
@@ -591,7 +591,7 @@ Postman をダウンロードしてインストールしたら、次の情報を
 * クライアントシークレット (Anypoint Platform/MQ から)
 * キュー名 - Postman で設定可能
 
-Anypoint MQ API へのアクセスを許可したら、メッセージをパブリッシュしたり、メッセージをコンシュームしたり、返されたボディの情報からロック ID を取得したりします。
+Anypoint MQ API へのアクセスを許可したら、メッセージをパブリッシュしたり、メッセージをコンシュームしたり、返された body の情報からロック ID を取得したりします。
 
 たとえば、次の情報がコンシューム (GET) コマンドから返されます。
 
