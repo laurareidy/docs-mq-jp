@@ -1,34 +1,42 @@
-= MQ コネクタ
+= Anypoint MQ コネクタ
 ifndef::env-site,env-github[]
 include::_attributes.adoc[]
 endif::[]
 
-Anypoint MQ コネクタは次のバージョンで使用できます。
+Anypoint MQ コネクタは Mule 3 および Mule 4 で使用できます。
 
-[%header,cols="50a,50a"]
-|===
-|Mule 3: |Mule 4:
-|
+== Anypoint MQ コネクタ 3.x - Mule 4
 
-* xref:3.9@mule-runtime::anypoint-mq-connector.adoc[Mule 3 MQ コネクタ]
-** xref:3.9@mule-runtime::anypoint-mq-connector-reference.adoc[コネクタリファレンス]
-** xref:release-notes::connector/mq-connector-release-notes.adoc[コネクタリリースノート]
-* https://www.mulesoft.com/exchange/org.mule.tooling.messaging/mule-module-anypoint-mq-ee-studio/[Anypoint Exchange Mule 3 MQ コネクタ]
+* xref:connectors::anypoint-mq/3.x/anypoint-mq-connector.adoc[Mule 4 用 Anypoint MQ コネクタ 3.x]
+** xref:connectors::anypoint-mq/3.x/anypoint-mq-ack.adoc[ACK 操作と NACK 操作]
+** xref:connectors::anypoint-mq/3.x/anypoint-mq-listener.adoc[Subscribe 操作]
+** xref:connectors::anypoint-mq/3.x/anypoint-mq-consume.adoc[Consume 操作]
+** xref:connectors::anypoint-mq/3.x/anypoint-mq-publish.adoc[Publish 操作]
+** xref:connectors::anypoint-mq/3.x/anypoint-mq-connector-reference.adoc[Anypoint MQ コネクタ 3.x リファレンス]
+** xref:release-notes::connector/anypoint-mq-connector-release-notes-mule-4.adoc[Anypoint MQ コネクタリリースノート - Mule 4]
+* https://www.mulesoft.com/exchange/com.mulesoft.connectors/anypoint-mq-connector/[Anypoint Exchange の Anypoint MQ コネクタ - Mule 4]
 
-|
+== Anypoint MQ コネクタ 2.x - Mule 4
 
-* xref:connectors::anypoint-mq/anypoint-mq-connector.adoc[Mule 4 MQ コネクタ]
-** xref:connectors::anypoint-mq/anypoint-mq-ack.adoc[メッセージ肯定応答]
-** xref:connectors::anypoint-mq/anypoint-mq-listener.adoc[新規メッセージのリスン]
-** xref:connectors::anypoint-mq/anypoint-mq-consume.adoc[コンシューム操作]
-** xref:connectors::anypoint-mq/anypoint-mq-publish.adoc[メッセージのパブリッシュ]
-** xref:connectors::anypoint-mq/anypoint-mq-connector-reference.adoc[コネクタリファレンス]
-** xref:release-notes::connector/anypoint-mq-connector-release-notes-mule-4.adoc[コネクタリリースノート]
-* https://www.mulesoft.com/exchange/com.mulesoft.connectors/anypoint-mq-connector/[Anypoint Exchange Mule 4 MQ コネクタ]
+* xref:connectors::anypoint-mq/2.x/anypoint-mq-connector.adoc[Mule 4 用 Anypoint MQ コネクタ 2.x]
+** xref:connectors::anypoint-mq/2.x/anypoint-mq-ack.adoc[ACK 操作と NACK 操作]
+** xref:connectors::anypoint-mq/2.x/anypoint-mq-listener.adoc[Subscribe 操作]
+** xref:connectors::anypoint-mq/2.x/anypoint-mq-consume.adoc[Consume 操作]
+** xref:connectors::anypoint-mq/2.x/anypoint-mq-publish.adoc[Publish 操作]
+** xref:connectors::anypoint-mq/2.x/anypoint-mq-connector-reference.adoc[Anypoint MQ コネクタ 2.x リファレンス]
+** xref:release-notes::connector/anypoint-mq-connector-release-notes-mule-4.adoc[Anypoint MQ コネクタリリースノート - Mule 4]
+* https://www.mulesoft.com/exchange/com.mulesoft.connectors/anypoint-mq-connector/[Anypoint Exchange の Anypoint MQ コネクタ - Mule 4]
 
-|===
 
-== MQ API
+== Anypoint MQ コネクタ - Mule 3
+
+* xref:3.9@mule-runtime::anypoint-mq-connector.adoc[Mule 3 用 Anypoint MQ コネクタ]
+** xref:3.9@mule-runtime::anypoint-mq-connector-reference.adoc[Anypoint MQ コネクタリファレンス - Mule 3]
+** xref:release-notes::connector/mq-connector-release-notes.adoc[Anypoint MQ コネクタリリースノート - Mule 3]
+* https://www.mulesoft.com/exchange/org.mule.tooling.messaging/mule-module-anypoint-mq-ee-studio/[Anypoint Exchange の Anypoint MQ コネクタ - Mule 3]
+
+
+== Anypoint MQ の API
 
 * https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-admin/[Anypoint MQ 管理 API]
 * https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-broker/[Anypoint MQ ブローカー API]
@@ -36,5 +44,4 @@ Anypoint MQ コネクタは次のバージョンで使用できます。
 
 == 関連情報
 
-* xref:mq-faq.adoc[MQ FAQ]
-* xref:release-notes::mq/anypoint-mq-release-notes.adoc[MQ リリースノート]
+* xref:mq-faq.adoc[Anypoint MQ FAQ]

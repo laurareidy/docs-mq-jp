@@ -2,25 +2,26 @@
 ifndef::env-site,env-github[]
 include::_attributes.adoc[]
 endif::[]
+:imagesdir: ../assets/images/
 
-このチュートリアルは、パブリッシュ/サブスクライブキューメカニズムを使用する Anypoint MQ を使用して、メッセージの送受信する場合に役立ちます。Anypoint MQ には、Anypoint Platform に組み込まれたユーザインターフェースが用意されており、メッセージをキューまたはメッセージ交換に送信し、キューからメッセージを読み取ることができます。Anypoint MQ には、Anypoint Studio と連動するコネクタも用意されています。Anypoint Studio で使用できる Mule 3 および Mule 4 コネクタについては、xref:mq-connectors.adoc[「MQ コネクタ」]を参照してください。
+このチュートリアルは、パブリッシュ/サブスクライブキューメカニズムを使用する Anypoint MQ を使用して、メッセージの送受信する場合に役立ちます。Anypoint MQ には、Anypoint Platform に組み込まれたユーザインターフェースが用意されており、メッセージをキューまたはメッセージ交換に送信し、キューからメッセージを読み取ることができます。Anypoint MQ には、Anypoint Studio と連動するコネクタも用意されています。Anypoint Studio で使用できる Mule 3 および Mule 4 コネクタについては、xref:mq-connectors.adoc[「Anypoint MQ コネクタ」]を参照してください。
 
 == 前提条件
 
-. xref:mq-understanding.adoc[「MQ の用語」]を参照してください。
+. xref:mq-understanding.adoc[「Anypoint MQ の用語」]を参照してください。
 . Anypoint Platform アカウントを作成して、MQ で環境やユーザ権限を設定したり、アプリケーションを登録したり、キューおよびメッセージ交換を作成したりします。Anypoint Platform や左のナビゲーションバーで Anypoint MQ にアクセスできます。
 . MQ を使用するには、Enterprise ライセンスが必要です。無料トライアルを入手するには、MuleSoft 営業チームにお問い合わせください。
 . Anypoint Studio をダウンロードしてインストールします。
-. このチュートリアルで MQ をテストするには、https://curl.haxx.se[curl コマンド]が必要になります。 
+. このチュートリアルで Anypoint MQ をテストするには、&#8203;https://curl.haxx.se[`curl` コマンド]が必要になります。 
 
-キューおよびメッセージ交換の名前には、英数字 (a ～ z、A ～ Z、0 ～ 9)、ドット (.)、ダッシュ (-) を含めることができます。その他のすべての文字は使用できません。キューおよびメッセージ交換の名前の長さは、127 文字に制限されています。
+キューおよびメッセージ交換の名前には、英数字 (a ～ z、A ～ Z、0 ～ 9)、ドット (.)、ダッシュ (-) を含めることができます。その他の文字は使用できません。キューおよびメッセージ交換の名前の長さは、127 文字に制限されています。
 
 == キューの作成
 
 キューは、メッセージを保持する一時的な領域を提供します。アプリケーションがメッセージをキューにプッシュし、他のアプリケーションがそのメッセージを使用します。Anypoint MQ では、メッセージを読み取ったり、後で表示するメッセージを返したり、メッセージを削除したりできます。デフォルトでは、他のアプリケーションが読み取れるようにメッセージは待機領域に返されます。メッセージは、存続期間 (TTL) 値の有効期限が切れるまで保持されます。デフォルトでは、メッセージは最大 7 日間 Anypoint MQ に保持されます。メッセージの最小 TTL は 1 分で最大 TTL は 14 日です。
 
-. Anypoint Platform にログインし、[MQ] をクリックします。
-. [Destinations (宛先)] をクリックします。
+. Anypoint Platform にログインし、*[MQ]* をクリックします。
+. *[Destinations (宛先)]* をクリックします。
 +
 image::mq-destinations-option.png[]
 +
@@ -31,25 +32,27 @@ image::mq-create-choices.png[]
 +
 image::mq-create-demo-queue.png[]
 +
-. [Create Queue (キューを作成)] 画面で、キューの名前を指定します。このチュートリアルでは、`MyDemoQueue` という値を使用します。 
+. *[Create Queue (キューを作成)]* 画面で、キューの名前を指定します。このチュートリアルでは、`MyDemoQueue` を使用します。 
 +
 TTL は、存続期間 (メッセージが削除されるまでにキューに留まっていられる期間) です。[default lock TTL (デフォルトのロック TTL)] により、他のアプリケーションがメッセージを使用できない期間が決まります。メッセージをロックしても、他のメッセージの読み取りがブロックされることはありません。
 . 完了したら、*[Save Changes (変更を保存)]* をクリックします。
 +
 キューが作成され、*[Destinations (宛先)]* 画面に戻ります。
++
+[NOTE]
+====
+[Destinations (宛先)] 画面でキューエントリのどこをクリックするかによって、次に表示される内容が決まります。
 
-*注意*: [Destinations (宛先)] 画面でキューエントリのどこをクリックするかによって、次に表示される内容が決まります。
+image:mq-entryui.png[]
+====
 
-image::mq-entryui.png[]
-
-*注意:* キューを削除する必要がある場合は、xref:mq-faq.adoc[「MQ FAQ」]のxref:mq-faq.adoc#how-do-i-delete-a-queue[「キューを削除する方法は?」]を参照してください。
+キューを削除する必要がある場合は、xref:mq-faq.adoc[「Anypoint MQ FAQ」]のxref:mq-faq.adoc#how-do-i-delete-a-queue[「キューを削除する方法は?」]を参照してください。
 
 == キューへのメッセージの送信
 
-. Anypoint Platform にログインし、[MQ] をクリックします。
-. [Destinations (宛先)] をクリックします。
-. [Destinations (宛先)] で MyDemoQueue エントリをクリックすると、
-キューの詳細が表示されます。
+. Anypoint Platform にログインし、*[MQ]* をクリックします。
+. *[Destinations (宛先)]* をクリックします。
+. *[Destinations (宛先)]* で `MyDemoQueue` エントリをクリックすると、キューに関する詳細が表示されます。
 . キューエントリの左側をクリックしてメッセージング機能を開くか、キューエントリの右側をクリックし、キュー名の右側にある矢印をクリックします。
 +
 image::mq-access-messaging2.png[]
@@ -66,14 +69,14 @@ image::mq-msg-sender-text-payload2.png[]
 
 == キューのメッセージの確認
 
-. [Destinations (宛先)] をクリックします。
+. *[Destinations (宛先)]* をクリックします。
 . キューエントリの右側をクリックして詳細を表示し、キューのメッセージ数を確認します。
 +
 image::mq-num-queued-msgs.png[]
 
 == キューからのメッセージの取得
 
-. [Anypoint Platform] > [MQ] で、*[Message Browser (メッセージブラウザ)]* をクリックします。
+. *[Anypoint Platform]* > *[MQ]* で、*[Message Browser (メッセージブラウザ)]* をクリックします。
 +
 image::mq-click-msg-browser2.png[]
 +
@@ -85,8 +88,7 @@ image::mq-get-messages2.png[]
 +
 image::mq-click-id2.png[]
 +
-. 他のアプリケーションがメッセージを読み取れるようにメッセージをキューに返す場合、
-[Return Messages (メッセージを返す)] アイコン (デフォルトの状態) をクリックします。 
+. メッセージをキューに戻す場合、他のアプリケーションでもそのメッセージを読み取れるように、[Return Messages (メッセージを戻す)] アイコンをクリックします (これがデフォルトの動作です)。 
 画面を [Message Sender (メッセージ送信者)] または [Destinations (宛先)] に切り替えると、メッセージはキューに自動的に戻ります。Anypoint MQ では、メッセージをキューに戻すことは `nack` と呼ばれます。メッセージは変更されません。ただし、キューの作成時に設定した存続期間 (TTL) の値によって、Anypoint MQ でメッセージが削除されるまでメッセージを使用できる期間が決まります。
 +
 image::mq-click-retmsgs2.png[]
@@ -130,32 +132,31 @@ CSV メッセージを送信する手順は、次のとおりです。
 +
 . [Message Browser (メッセージブラウザ)]、メッセージ ID の順にクリックすると、メッセージが表示されます。
 
-== クライアントアプリケーションの登録
+== クライアント Mule アプリケーションの登録
 
-. Anypoint Platform にログインし、[MQ] をクリックします。
-. [Client App (クライアントアプリケーション)] をクリックします。
+. Anypoint Platform にログインし、*[MQ]* をクリックします。
+. *[Client App (クライアントアプリケーション)]* をクリックします。
 +
 image::mq-click-client-apps.png[]
 +
 . 青色のプラスアイコン image:mq-blue-plus-icon.png[] をクリックします。
-. `DemoClientApp` などのアプリケーション名を指定し、[Save Changes (変更を保存)] をクリックします。
+. `DemoClientApp` などのアプリケーション名を指定し、*[Save Changes (変更を保存)]* をクリックします。
 +
 image::mq-create-client-app-name.png[]
 +
-. 必要に応じて [Client Apps (クライアントアプリケーション)] ウィンドウを開いたままにして、
-クライアント ID とクライアントシークレットをコピーして Anypoint Studio の設定に貼り付けます。
+. 必要に応じて *[Client Apps (クライアントアプリケーション)]* ウィンドウを開いたままにして、クライアント ID とクライアントシークレットをコピーして Anypoint Studio の設定に貼り付けます。
 
-== Design Center での MQ の設定
+== Design Center での Anypoint MQ の設定
 
 IMPORTANT: Design Center を使用する前に、ブラウザで LastPass や Okta などのパスワードプログラムを無効にします。無効にしないと、パスワードプログラムが [HTTP Listener (HTTP リスナ)] の [TLS] タブにパスワードを挿入します。[TLS] タブにパスワードが挿入されると、アプリケーションが失敗します。 
 
-Design Center でアプリケーションの設定を開始する前に、ウィンドウを開いたままにして [Anypoint Platform] > [MQ] に移動します。クライアントアプリケーションがそのクライアント ID とクライアントシークレットを取得できるようにするアクセス対象のキューを決定します。
+Design Center でアプリケーションの設定を開始する前に、ブラウザウィンドウを開いたままにして *[Anypoint Platform]* > *[MQ]* に移動します。アクセスするキューを決定し、そのクライアント ID とシークレットをコピーできるように Mule アプリケーションを使用できるようにします。
 
-. [Anypoint Platform] > [Design Center] で、[Create (作成)] > [Mule Application (Mule アプリケーション)] をクリックします。
+. *[Anypoint Platform]* > *[Design Center]* で、*[Create (作成)]* > *[Mule Application (Mule アプリケーション)]* をクリックします。
 +
 image::mq-dc-create.png[]
 +
-. プロジェクト名を入力して、[Create (作成)] をクリックします。このチュートリアルでは、アプリケーションに `mqdemo` という名前を付けます。
+. プロジェクト名を入力して、*[Create (作成)]* をクリックします。このチュートリアルでは、アプリケーションに `mqdemo` という名前を付けます。
 +
 image::mq-dc-new-mule-app.png[]
 +
@@ -163,14 +164,13 @@ image::mq-dc-new-mule-app.png[]
 +
 image::mq-dc-go-straight.png[]
 +
-. MQ コネクタのアクセスを開始するアクションのトリガを選択します。 
-最も簡単な方法は、HTTP リスナを使用することです。このチュートリアルでは、HTTP リスナと curl コマンドを使用してアクセスを開始します。または、サブスクライバとして MQ を使用して宛先名からメッセージを取得するか、規定された時間に入力を受け入れるようにスケジューラを指定することもできます。
+. Anypoint MQ コネクタのアクセスを開始するアクションのトリガを選択します。最も簡単なトリガは HTTP リスナです。このチュートリアルでは、HTTP リスナと `curl` コマンドを使用してアクセスを開始します。または、サブスクライバとして Anypoint MQ を使用して宛先名からメッセージを取得するか、規定された時間に入力を受け入れるようにスケジューラを指定することもできます。
 +
 トリガの検索ボックスにいくつかの文字 (「HT」など) を入力し、[HTTP Listener (HTTP リスナ)] を選択します。
 +
 image::mq-dc-http-find.png[]
 +
-. [HTTP Listener (HTTP リスナ)] で、[Path (パス)] に `/mq/{messageId}` という値を設定します。
+. [HTTP Listener (HTTP リスナ)] で、*[Path (パス)]* に `/mq/{messageId}` という値を設定します。
 +
 image::mq-dc-http-path.png[]
 +
@@ -178,29 +178,26 @@ image::mq-dc-http-path.png[]
 +
 image::mq-dc-click-plus.png[]
 +
-. [Component (コンポーネント)] メニューで、[Mule Anypoint MQ Connector (Mule Anypoint MQ コネクタ)] を選択します。
-. このチュートリアルでは、[Publish (パブリッシュ)] 操作を選択します。
+. *[Component (コンポーネント)]* メニューで、[Mule Anypoint MQ Connector (Mule Anypoint MQ コネクタ)] を選択します。
+. このチュートリアルでは、*Publish* 操作を選択します。
 +
 image::mq-dc-publish-op.png[]
 +
-その他の操作については、キューから送信されたメッセージを受信するアプリケーションを作成している場合は [Consume (コンシューム)] 操作を使用します。アプリケーションにメッセージの処理が成功したかどうかを判断するためのテストがある場合は [Ack (肯定応答)] 操作を使用して、メッセージが受信されて削除できることを肯定応答します。同様に、メッセージの処理が失敗した場合、[Nack (否定応答)] 操作を使用して、メッセージの否定応答を行います。[Nack (否定応答)] の場合、メッセージがキューに返されてアクセスを待機します。
+その他の操作については、キューから送信されたメッセージを受信する Mule アプリケーションを作成している場合は *Consume* 操作を使用します。アプリケーションにメッセージの処理が成功したかどうかを判断するためのテストがある場合は *Ack* 操作を使用して、メッセージが受信されて削除できることを肯定応答します。同様に、メッセージの処理が失敗した場合、*Nack* 操作を使用して、メッセージの否定応答を行います。*[Nack (否定応答)]* の場合、メッセージがキューに返されてアクセスを待機します。
 + 
-. *[Destination (宛先)]* で、[Anypoint Platform] > [MQ] ウィンドウからアクセスするキューの名前 (このチュートリアルで以前作成した MyDemoQueue などの名前) を指定します。次に、
-*[Set Up (セットアップ)]* をクリックします。
+. *[Destination (宛先)]* で、*[Anypoint Platform]* > *[MQ]* ウィンドウからアクセスするキューの名前 (このチュートリアルで以前作成した `MyDemoQueue` などの名前) を指定します。次に、*[Set Up (セットアップ)]* をクリックします。
 +
 image::mq-dc-destination.png[]
 +
-. [Anypoint Platform] > [MQ] ウィンドウからクライアント ID とクライアントシークレットをコピーします。[MQ] ウィンドウで、 
-[Client Apps (クライアントアプリケーション)] をクリックし、アプリケーションの名前をクリックします。ID とシークレットの値ごとに [Copy (コピー)] をクリックし、それぞれを [Design Center] ウィンドウに貼り付けます。
+. *[Anypoint Platform]* > *[MQ]* ブラウザウィンドウからクライアント ID とクライアントシークレットをコピーします。*[MQ]* ウィンドウで、*[Client Apps (クライアントアプリケーション)]* をクリックし、アプリケーションの名前をクリックします。ID とシークレットの値ごとに *[Copy (コピー)]* をクリックし、それぞれを [Design Center] ウィンドウに貼り付けます。
 +
 image::mq-dc-client-id-secret.png[]
 +
-. *[Test (テスト)]* をクリックして、MQ アプリケーションにアクセスできるかどうかを確認します。成功した場合、
-緑色の [Test Successful (テストに成功しました)] ボックスが表示されます。失敗した場合、クライアント ID、クライアントシークレット、URL の値が正しいことを確認してください。URL が [Anypoint Platform] > [MQ] の URL と一致していない場合、MQ から [Design Center] 画面に URL をコピーし、[Test (テスト)] をもう一度お試しください。
+. *[Test (テスト)]* をクリックして、Mule アプリケーションにアクセスできるかどうかを確認します。成功した場合、緑色の *[Test Successful (テストに成功しました)]* ボックスが表示されます。失敗した場合、クライアント ID、クライアントシークレット、URL の値が正しいことを確認してください。URL が *[Anypoint Platform]* > *[MQ]* の URL と一致していない場合、Anypoint MQ から [Design Center] 画面に URL をコピーし、もう一度 *[Test (テスト)]* をクリックしてください。
 +
 image::mq-dc-test-connection.png[]
 +
-. [Run (実行)] ボタンをクリックします。 
+. *[Run (実行)]* ボタンをクリックします。 
 +
 image::mq-dc-run-btn.png[]
 +
@@ -208,8 +205,7 @@ image::mq-dc-running.png[]
 
 === Design Center アプリケーションのテスト
 
-. コマンドプロンプトから次のコマンドを実行して、MQ メッセージとして「body」の値を送信します。URL の値「100」により、 
-HTTP リスナの値 `/mq{messageId}` に従ってメッセージ ID 値 (メッセージの識別子) が指定されます。
+. コマンドプロンプトから次のコマンドを実行して、Anypoint MQ メッセージとして `body` の値を送信します。URL の値 `100` により、HTTP リスナの値 `/mq{messageId}` に従ってメッセージ ID 値 (メッセージの識別子) が指定されます。
 +
 [source,json,linenums]
 ----
@@ -222,11 +218,11 @@ curl -X POST \
 ]'
 ----
 +
-DEPLOYMENT_URL の値は、[Design Center] ウィンドウのアプリケーションの詳細にあります。
+`DEPLOYMENT_URL` の値は、[Design Center] ウィンドウのアプリケーションの詳細にあります。
 +
 image::mq-dc-details.png[]
 +
-. [Anypoint Platform] > [MQ] で、Design Center で [Destination (宛先)] として指定したキューの名前をクリックします。*[Message Browser (メッセージブラウザ)]* をクリックします。
+. *[Anypoint Platform]* > *[MQ]* で、Design Center で [Destination (宛先)] として指定したキューの名前をクリックします。*[Message Browser (メッセージブラウザ)]* をクリックします。
 +
 image::mq-msg-browser.png[]
 +
@@ -234,35 +230,34 @@ image::mq-msg-browser.png[]
 +
 image::mq-get-messages.png[]
 +
-. メッセージページの ID 値をクリックして、メッセージコンテンツを表示します。
+. メッセージページの *ID* 値をクリックして、メッセージコンテンツを表示します。
 +
 image::mp-dc-test-in-mq.png[]
 +
-. curl コマンドの本文テキストを変更し、ステップを繰り返してメッセージを表示します。
+. `curl` コマンドの本文テキストを変更し、ステップを繰り返してメッセージを表示します。
 
-これで、Design Center で MQ を設定したり、REST API コマンドを MQ ブローカー API に送信したり、MQ を使用して結果を表示したりできるようになりました。
+これで、Design Center で MQ を設定したり、REST API コマンドを MQ ブローカー API に送信したり、Anypoint MQ を使用して結果を表示したりできるようになりました。
 
 
-== Studio 7 アプリケーションの作成
+== Studio 7 Mule アプリケーションの作成
 
-Anypoint Studio 7 を使用して、Design Center とほぼ同じように MQ アプリケーションを作成できます。Studio 7 では、アプリケーションを作成してプログラムをテストし、アプリケーションを zip ファイルにパッケージ化して [Anypoint Platform] > [Runtime Manager] に配置できます。Runtime Manager によってアプリケーションが提供されるため、前の<<Design Center での MQ の設定>>セクションで行ったように curl コマンドを送信できます。詳細は、xref:mq-connectors.adoc[「MQ コネクタ」]を参照してください。
+Anypoint Studio 7 を使用して、Design Center とほぼ同じように Anypoint MQ を使用する Mule アプリケーションを作成できます。Studio 7 では、Mule アプリケーションを作成してプログラムをテストし、Mule アプリケーションを zip ファイルにパッケージ化して *[Anypoint Platform]* > *[Runtime Manager]* に配置できます。Runtime Manager によって Mule アプリケーションが提供されるため、前の​<<Design Center での Anypoint MQ の設定>>​セクションで行ったように `curl` コマンドを送信できます。詳細は、xref:mq-connectors.adoc[「Anypoint MQ コネクタ」]を参照してください。
 
 前提条件: 
 
-* Studio 7 では、https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html[Oracle Java SDK 8] をインストールする必要があります。バージョン 8 より前または後の Java はサポートされていません。 
-* Anypoint Platform で、環境を *[Production (本番)]* に変更し、 
-[Anypoint Platform] > [MQ] で設定および取得する値が本番環境にもあることを確認します。
-* まだ完了していない場合は、https://www.mulesoft.com/lp/dl/studio[Anypoint Studio 7 をダウンロードしてインストール]します。
+* Studio 7 では、&#8203;https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html[Oracle Java SDK 8] をインストールする必要があります。バージョン 8 より前または後の Java はサポートされていません。 
+* Anypoint Platform で、環境を *[Production (本番)]* に変更し、*[Anypoint Platform]* > *[MQ]* で設定および取得する値が本番環境にもあることを確認します。
+* まだ完了していない場合は、&#8203;https://www.mulesoft.com/lp/dl/studio[Anypoint Studio 7 をダウンロードしてインストール]します。
 
-=== MQ の Studio 7 の設定
+=== Anypoint MQ の Studio 7 の設定
 
-. Studio を起動し、[File (ファイル)] > [New (新規)] > [Mule Project (Mule プロジェクト)] をクリックし、プロジェクトの名前を指定します (`mq` など)。
+. Studio を起動し、*[File (ファイル)]* > *[New (新規)]* > *[Mule Project (Mule プロジェクト)]* をクリックし、プロジェクトの名前を指定します (`mq` など)。
 . ツールバーの [Exchange (交換)] アイコンをクリックします。
 +
 image::mq-st7-exchange.png[]
 +
 . Exchange で、[Login (ログイン)] をクリックし、Anypoint Platform のユーザ名とパスワードを指定します。
-. Anypoint MQ コネクタを検索し、*[Add to project (プロジェクトに追加)]* をクリックして [Proceed (続行)] をクリックします。
+. Anypoint MQ コネクタを検索し、*[Add to project (プロジェクトに追加)]* をクリックして *[Proceed (続行)]* をクリックします。
 . [Mule Palette (Mule パレット)] で [HTTP] をクリックします。
 +
 image::mq-st7-mule-palette.png[]
@@ -272,42 +267,40 @@ image::mq-st7-mule-palette.png[]
 +
 image::mq-st7-flow.png[]
 +
-. [Listener (リスナ)] アイコンをクリックします。[General (一般)] > [Path (パス)] に `/mq/{messageId}` という値を設定します。
+. [Listener (リスナ)] アイコンをクリックします。*[General (一般)]* > *[Path (パス)]* を `/mq/{messageId}` に設定します。
 +
 image::mq-st7-listener-path.png[]
 +
 . *[Connector configuration (コネクタ設定)]* 項目の右にある緑のプラス記号をクリックします。
-. [Host (ホスト)] を「0.0.0.0」、[Port (ポート)] を「8081」に設定します。他のすべての値はそのままにします。
+. [Host (ホスト)] を `0.0.0.0` に、[Port (ポート)] を `8081` に設定します。他のすべての値はそのままにします。
 +
 image::mq-st7-globals.png[]
 +
-. [MQ Publish (MQ パブリッシュ)] アイコンをクリックします。[Anypoint Platform] > [MQ] で [Destination (宛先)] にキューの名前を設定します。キューの環境が本番環境であることを確認します。
+. [MQ Publish (MQ パブリッシュ)] アイコンをクリックします。*[Anypoint Platform]* > *[MQ]* で *[Destination (宛先)]* にキューの名前を設定します。キューの環境が本番環境であることを確認します。
 . *[Connector configuration (コネクタ設定)]* 項目の右にある緑のプラス記号をクリックします。
-. [URL] 項目に MQ の URL を設定します。
+. [URL] 項目を *[MQ]* の URL に設定します。
 +
 image::mq-url.png[]
 +
-. MQ で、[Client App (クライアントアプリケーション)] をクリックします。必要に応じて、新しいアプリケーションを作成します。クライアント ID とクライアントシークレットをクリップボードにコピーし、それぞれを Studio に貼り付けます。MQ の環境が本番環境であることを確認します。
+. *[MQ]* で、*[Client App (クライアントアプリケーション)]* をクリックします。必要に応じて、新しいアプリケーションを作成します。クライアント ID とクライアントシークレットをクリップボードにコピーし、それぞれを Studio に貼り付けます。*[MQ]* に [Production (本番)] 環境と表示されることを確認します。
 +
 image::mq-st7-id-secret.png[]
 +
 . *[Test Connection (接続をテスト)]* をクリックして、値が正しいことを確認します。
-. プロジェクトを保存します。Package Explorer でアプリケーションの名前を右クリックし、
-[Anypoint Platform] > [Deploy to CloudHub (CloudHub にデプロイ)] をクリックします。
+. プロジェクトを保存します。Package Explorer でアプリケーションの名前を右クリックし、*[Anypoint Platform]* > *[Deploy to CloudHub (CloudHub にデプロイ)]* をクリックします。
 +
 image::mq-st7-deploy.png[]
 +
-メッセージ「You do not have permission to deploy new applications in this environment. Please select an existing application to redeploy」(この環境に新しいアプリケーションをデプロイする権限がありません。既存のアプリケーションを選択して再デプロイしてください) が表示されたら、環境を [Production (本番)] などに設定して、[Design (設計)] *以外*の環境に変更してください。
-環境を変更するには、左上の *[Design (設計)]* ボックスをクリックして、別の環境を選択します。
+「`You do not have permission to deploy new applications in this environment. Please select an existing application to redeploy`」というメッセージが表示された場合は、[Design (設計)] *以外*の環境に変更してください。たとえば、環境を [Production (本番)] または [Sandbox] に設定します。
+環境を変更するには、左上の *[Design (設計)]* をクリックして、別の環境を選択します。
 +
 正常にデプロイするためにアプリケーションの名前を変更することが必要になる場合もあります。
 +
-. [Anypoint Platform] > [Runtime Manager] に移動します。アプリケーションが実行されていることを確認します。アプリケーションをクリックして、*[App url (アプリケーション URL)]* の値をコピーします。
-
+. *[Anypoint Platform]* > *[Runtime Manager]* に移動します。アプリケーションが実行されていることを確認します。アプリケーションをクリックして *[App url (アプリケーション URL)]* の値をコピーします。
 +
 image::mq-app-url.png[]
 +
-. 次のコマンドの DEPLOYMENT_URL を Runtime Manager の *[App url (アプリケーション URL)]* の値に置き換えます。コマンドプロンプトから次のコマンドを実行して、MQ メッセージとして「body」の値を送信します。 
+. 次のコマンドの `DEPLOYMENT_URL` を Runtime Manager の *[App url (アプリケーション URL)]* の値に置き換えます。コマンドプロンプトから次のコマンドを実行して、Anypoint MQ メッセージとして「body」の値を送信します。 
 +
 [source,json,linenums]
 ----
@@ -320,11 +313,11 @@ curl -X POST \
 ]'
 ----
 +
-宛先が見つからないことを示す 404 メッセージが表示された場合、Studio 7 の [MQ Publish (MQ パブリッシュ)] > [Destination (宛先)] 項目のキュー名が [Anypoint Platform] > [MQ] のキュー名と一致していることを確認します。
+宛先が見つからないことを示す 404 メッセージが表示された場合、Studio 7 の *[MQ Publish (MQ パブリッシュ)]* > *[Destination (宛先)]* 項目のキュー名が *[Anypoint Platform]* > *[MQ]* のキュー名と一致していることを確認します。
 +
-Studio 7 のプロジェクトを右クリックし、[Anypoint Platform] > [Deploy to CloudHub (CloudHub にデプロイ)] を選択して、アプリケーションを再デプロイできます。このコマンドでは、Runtime Manager のアプリケーションを更新できます。
+Studio 7 のプロジェクトを右クリックし、*[Anypoint Platform]* > *[Deploy to CloudHub (CloudHub にデプロイ)]* を選択して、Mule アプリケーションを再デプロイできます。このコマンドでは、Runtime Manager のアプリケーションを更新できます。
 +
-. [Anypoint Platform] > [MQ] (本番環境) でキュー名をクリックして、
+. *[Anypoint Platform]* > *[MQ]* (本番環境) でキュー名をクリックして、
 [Message Browser (メッセージブラウザ)]、[Get Messages (メッセージを取得)] をクリックし、メッセージをクリックしてメッセージのコンテンツを表示します。
 +
 image::mq-runtime-mgr-result.png[]
@@ -332,7 +325,7 @@ image::mq-runtime-mgr-result.png[]
 
 === Studio 7 の概要ビュー
 
-次のビューには、Package Explorer の MQ アプリケーション、HTTP リスナと MQ パブリッシュの位置、[Publish (パブリッシュ)] のプロパティが表示されています。
+次のビューには、Package Explorer の Mule アプリケーション、HTTP リスナと MQ パブリッシュの位置、[Publish (パブリッシュ)] のプロパティが表示されています。
 
 image::mq-st7-big-picture.png[]
 
@@ -377,29 +370,29 @@ http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 </mule>
 ----
 
-== Studio 6 アプリケーションの作成
+== Studio 6 Mule アプリケーションの作成
 
-*注意:* このセクションは、Anypoint Studio 6 にのみ適用されます。Studio 7 の場合、<<Studio 7 アプリケーションの作成>>を参照してください。
+このセクションは、Anypoint Studio 6 にのみ適用されます。Studio 7 の場合、​<<Studio 7 Mule アプリケーションの作成>>​を参照してください。
 
 . Studio 6 で、Studio タスクバーの [Exchange (交換)] アイコンをクリックします。
-. Anypoint Exchange で [Login (ログイン)] をクリックします。
-. Anypoint MQ コネクタを検索して [Install (インストール)] をクリックします。
+. Anypoint Exchange で *[Login (ログイン)]* をクリックします。
+. Anypoint MQ コネクタを検索して *[Install (インストール)]* をクリックします。
 . プロンプトに従ってコネクタをインストールします。
-. 新しい Mule プロジェクトを作成します。[File (ファイル)] > [New (新規)] > [Mule Project (Mule プロジェクト)] をクリックします。プロジェクトに「mqdemo」という名前を付けます。
-. 「http」を検索し、HTTP コネクタを Studio キャンバスにドラッグします。
+. 新しい Mule プロジェクトを作成します。*[File (ファイル)]* > *[New (新規)]* > *[Mule Project (Mule プロジェクト)]* をクリックします。プロジェクトに `mqdemo` という名前を付けます。
+. `http` を検索し、HTTP コネクタを Studio キャンバスにドラッグします。
 +
 image::mq-connector-visual-flow.png[]
 +
-. 「set」を検索し、*[Set Payload (ペイロードを設定)]* をキャンバスにドラッグします。
-. 「mq」を検索し、*[Anypoint MQ]* コネクタアイコンをキャンバスにドラッグします。
-. 「logger」を検索し、*[Logger (ロガー)]* をキャンバスにドラッグします。
+. `set` を検索し、*[Set Payload (ペイロードを設定)]* をキャンバスにドラッグします。
+. `mq` を検索し、*[Anypoint MQ]* コネクタアイコンをキャンバスにドラッグします。
+. `logger` を検索し、*[Logger (ロガー)]* をキャンバスにドラッグします。
 . HTTP コネクタをクリックし、*[Connector Configuration (コネクタ設定)]* の右にある緑色のプラス記号をクリックします。
-. HTTP コネクタの [Global Element Properties (グローバル要素のプロパティ)] で、デフォルトを受け入れて [OK] をクリックします。
+. HTTP コネクタの *[Global Element Properties (グローバル要素のプロパティ)]* メニューで、デフォルトを受け入れて [OK] をクリックします。
 . [Path (パス)] に `/mq/{messageId}` を設定します。
 +
 image::mq-http-path.png[]
 +
-. キャンバスの [Set Payload (ペイロードを設定)] をクリックし、[Value (値)] に以下を設定します。
+. キャンバスの *[Set Payload (ペイロードを設定)]* をクリックし、値を以下に設定します。
 +
 ----
 #[message.inboundProperties.'http.uri.params'.messageId]
@@ -407,8 +400,8 @@ image::mq-http-path.png[]
 +
 image::mq-set-payload.png[]
 +
-. Anypoint MQ コネクタをクリックし、[Connector Configuration (コネクタ設定)] の右にある緑色のプラス記号をクリックします。
-. MQ コネクタの [Global Element Properties (グローバル要素のプロパティ)] ウィンドウで、Anypoint Platform の情報を追加します。
+. Anypoint MQ コネクタをクリックし、*[Connector Configuration (コネクタ設定)]* の右にある緑色のプラス記号をクリックします。
+. Anypoint MQ コネクタの *[Global Element Properties (グローバル要素のプロパティ)]* ウィンドウで、Anypoint Platform の情報を追加します。
 +
 image::mq-connector-properties.png[]
 +
@@ -429,19 +422,17 @@ image::mq-operation-publish.png[]
 +
 image::mq-destination-queue2.png[]
 +
-. *[Logger (ロガー)]* をクリックし、[Message (メッセージ)] 項目に以下を設定します。
-+
-*MQ Message: #[payload]*
+. *[Logger (ロガー)]* をクリックし、[Message (メッセージ)] 項目を `MQ Message: #[payload]` に設定します。
 +
 image::mq-logger-properties.png[]
 +
 . プロジェクトを保存します。
 
-<<Studio 7 アプリケーションの作成>>と同じ curl コマンドを使用してアプリケーションをテストできます。Studio から CloudHub にアプリケーションをデプロイします。Runtime Manager でアプリケーションが開始されたら、curl コマンドを送信してメッセージを MQ に送信できます。
+​<<Studio 7 Mule アプリケーションの作成>><b>​</b>と同じ curl コマンドを使用してアプリケーションをテストできます。Studio から CloudHub に Mule アプリケーションをデプロイし、Runtime Manager でアプリケーションが開始されたら、curl コマンドを送信してメッセージを MQ に送信できます。
 
 === Studio 6 XML
 
-MQ コネクタを使用してアプリケーションを設定したら、次の XML と比較して設定を確認できます。
+Anypoint MQ コネクタを使用してアプリケーションを設定したら、次の XML と比較して設定を確認できます。
 
 Studio の [Configuration XML (設定 XML)] をクリックし、各自の XML と次の XML を比較します。必要に応じて、修正を行うことができます。
 
@@ -489,28 +480,31 @@ http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd">
 
 メッセージ交換は、1 つ以上のキューをグループ化し、メッセージ交換に送信されたメッセージがバインドされたすべてのキューに転送されるようにします。
 
-. Anypoint Platform にログインし、[MQ] に移動します。
-. [Destinations (宛先)] をクリックします。
+. *Anypoint Platform* にログインし、*[MQ]* に移動します。
+. *[Destinations (宛先)]* をクリックします。
 . 青色のプラスアイコン image:mq-blue-plus-icon.png[] をクリックします。
-. [Exchange (交換)] をクリックします。
+. *[Exchange (交換)]* をクリックします。
 . `MyDemoExchange` という名前を指定します。
-. チェックボックスをオンにして、MyDemoQueue をこのメッセージ交換にバインドします。
-. [Save Changes (変更を保存)] をクリックします。
-. [Destinations (宛先)] 画面で、メッセージ交換の [Type (種別)] をクリックして、その詳細をリストします。
+. チェックボックスをオンにして、`MyDemoQueue` をこのメッセージ交換にバインドします。
+. *[Save Changes (変更を保存)]* をクリックします。
+. *[Destinations (宛先)]* 画面で、メッセージ交換の *[Type (種別)]* をクリックして、その詳細をリストします。
 
 メッセージ交換を削除するには、xref:mq-faq.adoc[「Anypoint MQ FAQ」]の xref:mq-faq.adoc#how-do-i-delete-an-exchange[「メッセージ交換を削除する方法は?」]を参照してください。
 
 == メッセージ交換へのキューのバインド
 
-. Anypoint Platform にログインし、[MQ] をクリックします。
-. [Destinations (宛先)] をクリックします。
-. [Destinations (宛先)] で、メッセージ交換エントリの左側をクリックします。
+. Anypoint Platform にログインし、*[MQ]* をクリックします。
+. *[Destinations (宛先)]* をクリックします。
+. *[Destinations (宛先)]* で、メッセージ交換エントリの左側をクリックします。
 +
-*注意*: [Destinations (宛先)] テーブルでメッセージ交換エントリのどこをクリックするかによって、次に表示される内容が決まります。
+[NOTE]
+====
+*[Destinations (宛先)]* テーブルでメッセージ交換エントリのどこをクリックするかによって、次に表示される内容が決まります。
+
+image:mq-where-to-click-x2.png[]
+====
 +
-image::mq-where-to-click-x2.png[]
-+
-. メッセージ交換メニューで、メッセージ交換にバインドするキューごとに [Bind (バインド)] をクリックします。
+. メッセージ交換メニューで、メッセージ交換にバインドするキューごとに *[Bind (バインド)]* をクリックします。
 +
 image::mq-bind-queue-to-exchange2.png[]
 
@@ -519,26 +513,25 @@ image::mq-bind-queue-to-exchange2.png[]
 メッセージ交換へのメッセージの送信は、キューへのメッセージの送信とよく似ています。
 唯一の違いは、メッセージ交換にバインドされた任意のキューからメッセージを取得できることです。
 
-. Anypoint Platform にログインし、[MQ] に移動します。
-. [Destinations (宛先)] をクリックします。
-. [Destinations (宛先)] で `MessageExchange` エントリをクリックすると、
-メッセージ交換の詳細が表示されます。
-. 詳細画面の [MessageExchange] リンクをクリックして、[Message Sender (メッセージ送信者)] にアクセスします。
+. *Anypoint Platform* にログインし、*[MQ]* に移動します。
+. *[Destinations (宛先)]* をクリックします。
+. *[Destinations (宛先)]* で `MessageExchange` エントリをクリックすると、メッセージ交換に関する詳細が表示されます。
+. 詳細画面の *[MessageExchange]* リンクをクリックして、*[Message Sender (メッセージ送信者)]* にアクセスします。
 +
 image::mq-exchange-msg-access2.png[]
 +
-. [Message Sender (メッセージ送信者)] をクリックします。
+. *[Message Sender (メッセージ送信者)]* をクリックします。
 +
 image::mq-exchange-msg-sender2.png[]
 +
-. [Payload (ペイロード)] のコンテンツを入力し、[Send (送信)] をクリックします。
+. *[Payload (ペイロード)]* のコンテンツを入力し、*[Send (送信)]* をクリックします。
 +
 image::mq-exchange-payload2.png[]
 
-これで、<<キューからのメッセージの取得>>の説明に従って、[Message Browser (メッセージブラウザ)] を使用して MyDemoQueue のメッセージを取得できるようになりました。
+​*メッセージブラウザ*​を使用して `MyDemoQueue` からメッセージを取得できるようになりました (​<<キューからのメッセージの取得>>​​を参照)。
 
-メッセージの [Type (種別)] の値を変更することで、ペイロードのカンマ区切り値 (CSV) または JSON コンテンツを送信することもできます。詳細は、<<CSV または JSON メッセージの送信>>を参照してください。
+メッセージの [Type (種別)] の値を変更することで、ペイロードのカンマ区切り値 (CSV) または JSON コンテンツを送信することもできます。詳細は、​<<CSV または JSON メッセージの送信>>​を参照してください。
 
 == 関連情報
 
-* xref:mq-faq.adoc[MQ FAQ]
+* xref:mq-faq.adoc[Anypoint MQ FAQ]

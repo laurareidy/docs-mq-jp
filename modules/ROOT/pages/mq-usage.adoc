@@ -2,24 +2,25 @@
 ifndef::env-site,env-github[]
 include::_attributes.adoc[]
 endif::[]
-:keywords: mq, 使用量, グラフ, サブスクリプション, メッセージ単位, 要求, api, 受信済み
+:imagesdir: ../assets/images/
 
 データおよび API 要求の使用量を示すチャートや受信したメッセージ単位の数を表示できます。
 
-*注意:*
-
+[NOTE]
+====
 * 各メッセージ単位には、100 KB のメッセージデータが含まれます。メッセージ単位は、エンコードされたメッセージ文字数でカウントされます。Anypoint MQ では、100 KB を超えた分のメッセージデータ 100 KB ごとに追加のメッセージ単位が課金されます。
 * Anypoint MQ への各 API コールが 1 つの API 要求としてカウントされます。  これには、メッセージの送信、受信、および肯定応答のほか、キューおよび交換に対するすべての操作が含まれます。
 * 1 回の API コールから最大 10 個のメッセージを取得できますが、この 1 回の API コールのみが 1 つの要求として請求されます。  キューが空の場合など、メッセージを取得する要求でメッセージが返されない場合でも、1 つの API 要求として請求されます。
 * 月次請求使用量情報は 24 時間遅延します。
+====
 
-== MQ 使用量へのアクセス
+== Anypoint MQ 使用量へのアクセス
 
 MQ 使用量を表示する手順は、次のとおりです。
 
 . Anypoint Platform にログインします。
 . 左のナビゲーションバーまたは Anypoint Platform の開始画面から *[Access Management (アクセス管理)]* をクリックします。
-. [SUBSCRIPTION (サブスクリプション)] セクションで、*[MQ]* をクリックします。
+. *[SUBSCRIPTION (サブスクリプション)]* セクションで、*[MQ]* をクリックします。
 +
 image::mq-subscription.png[]
 +
@@ -33,4 +34,4 @@ image::mq-message-unit-color.png[]
 
 == 関連情報
 
-* xref:mq-faq.adoc[MQ FAQ]
+* xref:mq-faq.adoc[Anypoint MQ FAQ]

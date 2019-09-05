@@ -2,15 +2,17 @@
 ifndef::env-site,env-github[]
 include::_attributes.adoc[]
 endif::[]
+:imagesdir: ../assets/images/
 
 メッセージ交換を使用すると、メッセージ交換にバインドした 1 つ以上のxref:mq-queues.adoc[キュー]にメッセージを送信できます。
 
-*注意:*
-
+[NOTE]
+====
 * FIFO では、メッセージ交換の使用がサポートされません。同様に、FIFO キューはメッセージ交換にバインドできません。
 * メッセージ交換名には英数字 (a-z, A-Z、0-9)、ドット (.)、ダッシュ (-) のみを含めることができます。その他のすべての文字は使用できません。
 * メッセージ交換名の長さは 127 文字に制限されます。
 * メッセージ交換に送信するメッセージの最大サイズは 10 MB です。
+====
 
 メッセージ交換を作成する前に 1 つ以上のキューを作成します。詳細は、xref:mq-queues.adoc#to-create-a-queue[「キューの作成」]を参照してください。
 
@@ -28,15 +30,20 @@ image::mq-create-an-exchange.png[]
 +
 image::mq-name-the-exchange.png[]
 +
-NOTE: メッセージ交換名には、a-z、A-Z、0-9、ピリオド (.)、ハイフン (-) の文字のみを含めることができます。メッセージ交換名にスペースやその他の文字を含めることはできません。また、名前の最大長は 127 文字です。
+[NOTE]
+====
+* メッセージ交換名には、a-z、A-Z、0-9、ピリオド (.)、ハイフン (-) の文字のみを含めることができます。メッセージ交換名にスペースやその他の文字を含めることはできません。
+* メッセージ交換名の最大長は 127 文字です。
+====
 +
 . チェックボックスをオンにして、MyDemoQueue をこのメッセージ交換にバインドします。
 . *[Save Changes (変更を保存)]* をクリックします。
 . [Destinations (宛先)] 画面でメッセージ交換名をクリックすると、その詳細が表示されます。
 +
 image::mq-exchange-details2.png[]
-
-*注意:* メッセージ交換を削除する必要がある場合は、xref:mq-faq.adoc#how-do-i-delete-a-message-exchange[「メッセージ交換を削除する方法は?」]を参照してください。
++
+[NOTE]
+メッセージ交換を削除する必要がある場合は、xref:mq-faq.adoc#how-do-i-delete-a-message-exchange[「メッセージ交換を削除する方法は?」]を参照してください。
 
 == メッセージ交換へのキューのバインド
 
@@ -47,14 +54,16 @@ image::mq-exchange-details2.png[]
 . *[Destinations (宛先)]* をクリックします。
 . [Destinations (宛先)] で、メッセージ交換エントリの左側をクリックします。
 +
-*注意*: [Destinations (宛先)] テーブルでメッセージ交換エントリのどこをクリックするかによって、次に表示される内容が決まります。
-+
-image::mq-where-to-click-x2.png[]
+[NOTE]
+====
+[Destinations (宛先)] テーブルでメッセージ交換エントリのどこをクリックするかによって、次に表示される内容が決まります。
+
+image:mq-where-to-click-x2.png[]
+====
 +
 . [Exchange (交換)] メニューで、メッセージ交換にバインドするまたはメッセージ交換からバインド解除するキューごとに *[Bind (バインド)]* または *[Unbind (バインド解除)]* をクリックします。
 +
 image::mq-bind-queue-to-exchange2.png[]
-
 
 == メッセージ交換へのメッセージの送信
 
@@ -65,8 +74,7 @@ image::mq-bind-queue-to-exchange2.png[]
 . Anypoint Platform にログインします。
 . 上部のタスクバーで *[MQ]* をクリックします。
 . *[Destinations (宛先)]* をクリックします。
-. [Destinations (宛先)] で `MessageExchange` エントリをクリックすると、
-メッセージ交換の詳細が表示されます。
+. [Destinations (宛先)] で `MessageExchange` エントリをクリックすると、メッセージ交換に関する詳細が表示されます。
 . 詳細画面の *[MessageExchange]* リンクをクリックして、[Message Sender (メッセージ送信者)] にアクセスします。
 +
 image::mq-exchange-msg-access2.png[]
@@ -85,5 +93,5 @@ image::mq-exchange-payload2.png[]
 
 == 関連情報
 
-* xref:mq-faq.adoc[MQ FAQ]
-* xref:mq-connectors.adoc[MQ コネクタ]
+* xref:mq-faq.adoc[Anypoint MQ FAQ]
+* xref:mq-connectors.adoc[Anypoint MQ コネクタ]

@@ -1,17 +1,18 @@
-= MQ REST API
+= Anypoint MQ の REST API
 ifndef::env-site,env-github[]
 include::_attributes.adoc[]
 endif::[]
+:imagesdir: ../assets/images/
 
 Anypoint MQ API では、REST を使用してメッセージを送受信したり、キューやメッセージ交換を管理したり、結果を分析したりできます。
 
 Anypoint MQ には次の API が用意されています。
 
-* <<mqadminapi,MQ Admin API>>
-* <<mqbrokerapi,MQ Broker API>>
-* <<mqstatapi,MQ Stats API>>
+* <<mqadminapi,Anypoint MQ 管理 API>>
+* <<mqbrokerapi,Anypoint MQ ブローカー API>>
+* <<mqstatapi,Anypoint MQ 統計 API>>
 
-Anypoint MQ のポータルは https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/[開発者ポータル]内にあります。
+Anypoint MQ のポータルは https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/[開発者ポータル]にあります。
 
 == API のワークフロー
 
@@ -30,14 +31,14 @@ image::mq-api-workflow.png[]
 
 API にアクセスするには、アクセストークンを取得する必要があります。
 
-* <<mqadminapi,MQ Admin API>> - Anypoint Platform ユーザのアクセストークンを取得します。
-* <<mqbrokerapi,MQ Broker API>> - MQ アプリケーションのクライアント ID とクライアントシークレットを指定して、Anypoint MQ からトークンを取得します。
-* <<mqstatapi,MQ Stats API>> - Anypoint Platform ユーザのアクセストークンを取得します。
+* <<mqadminapi,Anypoint MQ 管理 API>> - Anypoint Platform ユーザのアクセストークンを取得します。
+* <<mqbrokerapi,Anypoint MQ ブローカー API>> - MQ アプリケーションのクライアント ID とクライアントシークレットを指定して、Anypoint MQ からトークンを取得します。
+* <<mqstatapi,Anypoint MQ 統計 API>> - Anypoint Platform ユーザのアクセストークンを取得します。
 
-それぞれの curl コマンドは API セクションで説明されています。
+それぞれの `curl` コマンドについては API セクションで説明します。
 
 [[mqadminapi]]
-== MQ Admin API
+== Anypoint MQ 管理 API
 
 * キューとメッセージ交換をブラウズする。
 * キューとメッセージ交換を作成する。
@@ -57,7 +58,7 @@ Anypoint Platform ユーザからアクセストークンを取得できます�
 curl -X POST -H "Content-Type: application/json" -d '{"username":"USERNAME", "password":"PASSWORD"}' https://anypoint.mulesoft.com/accounts/login
 ----
 
-次のような出力が返されます。
+このコマンドは、次のような出力を返します。
 
 [source,json,linenums]
 ----
@@ -68,7 +69,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"USERNAME", "pa
 }
 ----
 
-https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-admin/[Admin API] - アプリケーション、キュー、メッセージ交換を作成および管理します。
+https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-admin/[管理 API] - アプリケーション、キュー、メッセージ交換を作成および管理します。
 
 Admin API ポータルで、*[Download (ダウンロード)]* をクリックして API を RAML、Mule 3 圧縮コネクタファイル、または Mule 4 コネクタ JAR ファイルとしてダウンロードします。
 
@@ -78,12 +79,12 @@ image::mq-rest-admin-portal.png[]
 
 `"fifo": true` 項目を含めることで、Admin API ポータルから FIFO キューを作成できます。
 
-*注意:* 管理ポータルを使用する組織には、Anypoint MQ FIFO エンタイトルメントが必要です。MQ を使用可能なリージョンについては、xref:mq-faq.adoc[「MQ FAQ」]を参照してください。
+*注意:* 管理ポータルを使用する組織には、Anypoint MQ FIFO エンタイトルメントが必要です。Anypoint MQ が使用できるリージョンについては、xref:mq-faq.adoc[「Anypoint MQ FAQ」]を参照してください。
 
 `PUT` 操作を使用する次のパスの場合
 
-[listing]
-/organizations/{organizationId}/environments/{environmentId}/regions/{regionId}/destinations/queues/{queueId}
+[source]
+/organizations/ORGANIZATION_ID/environments/ENVIRONMENT_ID/regions/REGION_ID/destinations/queues/QUEUE_ID
 
 次の body を使用します。
 
@@ -98,7 +99,7 @@ image::mq-rest-admin-portal.png[]
 ----
 
 [[mqbrokerapi]]
-== MQ Broker API
+== Anypoint MQ ブローカー API
 
 この API を使用すると、キューとメッセージ交換からメッセージを送受信できます。
 
@@ -115,46 +116,57 @@ Windows ユーザの場合、この情報にアクセスする前に https://cur
 Broker API アクセストークンを取得する手順は、次のとおりです。
 
 . Anypoint Platform にログインします。
-. [MQ]、[Client Apps (クライアントアプリケーション)] の順にクリックし、青い丸のプラスアイコンをクリックしてアプリケーションを作成します。
-. クライアント ID とクライアントシークレットを取得し、これらの値で下の curl コマンドの `CLIENT_ID` と `CLIENT_SECRET` を置き換えます。
+. *[MQ]*、*[Client Apps (クライアントアプリケーション)]* の順にクリックし、青い丸のプラスアイコンをクリックしてアプリケーションを作成します。
+. クライアント ID とクライアントシークレットを取得し、下の curl コマンドでこれらの値を使用して `CLIENT_ID` と `CLIENT_SECRET` を置き換えます。
 +
 ----
 curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=CLIENT_ID&client_secret=CLIENT_SECRET&grant_type=client_credentials" "https://mq-us-east-1.anypoint.mulesoft.com/api/v1/authorize"
 ----
 +
-MQ と FIFO を使用可能なリージョンについては、xref:mq-faq.adoc[「MQ FAQ」]を参照してください。
+Anypoint MQ および FIFO が使用できるリージョンについては、xref:mq-faq.adoc[「Anypoint MQ FAQ」]を参照してください。
 +
 . curl コマンドを送信します。
 +
-次のような出力が返されます。
+このコマンドは、次のような出力を返します。
 +
 [source,json]
 ----
-{"access_token":"<token>","simple_client":{"envId":"<env_ID>","orgId":"<org-ID>"},"token_type":"bearer"}
+{"access_token":"<token>","simple_client":{"envId":"ENVIRONMENT_ID","orgId":"ORGANIZATION_ID"},"token_type":"bearer"}
 ----
 
-https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-broker/[Broker API Portal] - キューとメッセージ交換の間でパブリッシュ、コンシューム、ack、nack します。
+&#8203;https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-broker/[Broker API Portal] - キューとメッセージ交換の間でパブリッシュ、コンシューム、ack、nack します。
 
 Broker API ポータルで、*[Download (ダウンロード)]* をクリックして API を RAML、Mule 3 圧縮コネクタファイル、または Mule 4 コネクタ JAR ファイルとしてダウンロードします。
 
 image::mq-rest-broker-portal.png[]
 
 [[mqstatapi]]
-== MQ Stats API
+== Anypoint MQ 統計 API
 
-* キューとメッセージ交換の統計をブラウズする。  
-* 現在キューで待機しているメッセージ数を表示する。 
-* キューアクティビティの経時的な履歴データを表示する。 
-* 請求目的で組織全体の MQ の使用状況を表示する。
+ユースケース:
 
-Anypoint MQ Stats API は、Anypoint MQ メッセージキューへのアクセス権を提供します。
+* Anypoint MQ メトリクス:
+** キューのリアルタイム統計
+** キューの履歴統計
+** メッセージ交換の履歴統計
+* 使用量メトリクス - 請求目的で組織全体の Anypoint MQ の使用状況を表示する。
+** 環境ごとの使用量
+** 組織ごとの使用量
+* キューとメッセージ交換の統計をブラウズする  
+* 現在キューで待機しているメッセージ数を表示する
 
-Anypoint Platform ユーザからアクセストークンを取得できます。アクセストークンは「ベアラー」とも呼ばれます。
-アクセストークのデフォルトの存続期間 (TTL) は 60 分です。 
+詳細は、MuleSoft 開発者ポータルの&#8203;https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-stats/[「Anypoint MQ 統計 API」]を参照してください。
 
+=== Anypoint MQ 統計 API の使用
+
+注意: Anypoint MQ 統計 API にアクセスするには、最初に https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/access-management-api/[Anypoint アクセス管理 API] を使用して認証する必要があります。
+
+統計 API を使用するために、Anypoint Platform ユーザからアクセストークンを取得できます。
+アクセストークンは「ベアラー」とも呼ばれます。
+アクセストークのデフォルトの存続期間 (TTL) は 60 分です。
 組織 ID と環境 ID は、Anypoint Platform が MQ 内で監査可能なアクションに対して作成する `payload.txt` ファイルで取得できます。xref:access-management::audit-logging.adoc#to-query-audit-logging-for-anypoint-mq[「MQ 監査ログ」]を参照してください。 
 
-次の curl コマンドを使用して、アクセストークンを取得できます。
+次の `curl` コマンドを使用して、アクセストークンを取得できます。
 
 [source,bash]
 ----
@@ -172,29 +184,165 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"USERNAME", "pa
 }
 ----
 
-https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-stats/[Stats API] - キューのパフォーマンスの統計分析を実行します。
+https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-stats/[Anypoint MQ Stats API] - キューのパフォーマンスの統計分析を実行します。
 
 Stats API ポータルで、*[Download (ダウンロード)]* をクリックして API を RAML、Mule 3 圧縮コネクタファイル、または Mule 4 コネクタ JAR ファイルとしてダウンロードします。
 
 image::mq-rest-stats-portal.png[]
 
+=== キューのリアルタイム統計
+
+キューにあるメッセージの数およびインフライトメッセージの数の即時のスナップショットを取得できます (インフライトメッセージの内容については、xref::mq-understanding.adoc[「Anypoint MQ の用語」]を参照)。このデータはほぼリアルタイムで更新されます。統計 API は複数のキューのリアルタイムを取得でき、カンマ区切りリストを返します。 
+
+`/queues?destinationIds={queue1},{queue2}`
+
+*要求と応答のサンプル:*
+
+[source,example,linenums]
+----
+https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID/environments/ENVIRONMENT_ID/regions/REGION_URL
+/queues?destinationIds=DESTINATION_ID
+
+[
+  {
+      "destination": "95bgpyxYsVyFE",
+      "messages": 0,
+      "inflightMessages": 0
+  }
+]
+----
+
+=== キューの履歴統計
+
+この API を使用してキューの履歴統計を取得できますが、履歴統計はリアルタイムでは更新されず、データがパブリッシュされるまでに約 5 ～ 10 分の遅延があります。履歴データの保持期間は 15 か月間です。また、データ量を抑えるために、履歴データは粒度を下げて保存されます。期間が 60 秒未満のデータポイントの保持期間は 3 時間、1 分のデータポイントは 15 日間、5 分のデータポイントは 63 日間、1 時間のデータポイントは 15 か月間です。
+
+`/queues/{queueId}?startDate=...&endDate=...&period=...`
+
+*要求と応答のサンプル:*
+
+[source,example,linenums]
+----
+https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID/environments/ENVIRONMENT_ID/regions/REGION_URL
+/queues/95bgpyxYsVyFE?startDate=Thursday, 8 Nov 2018 04:49:37 GMT
+&endDate=Sun, 11 Nov 2018 04:60:44 GMT
+&period=600
+
+{
+    "destination": "95bgpyxYsVyFE",
+    "messages": [
+        {
+            "date": "2018-11-08T04:59:37.000+0000",
+            "value": 0
+        },
+        {
+            "date": "2018-11-08T05:09:37.000+0000",
+            "value": 0
+        }
+    ]
+}
+----
+
+期間は整数であり、秒単位のデータポイントの粒度です。
+
+=== 交換の履歴統計
+
+保持ポリシーは前の​「​<<キューの履歴統計​​>>」​セクションと同じです。
+
+`/exchanges/{exchangeId}?startDate=...&endDate=...&period=...`
+
+*要求と応答のサンプル:*
+
+[source,example,linenums]
+----
+https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID/environments/ENVIRONMENT_ID/regions/REGION_URL
+/exchanges/exchange-test?
+startDate=Wed%2C%2014%20Nov%202018%2021%3A53%3A08%20GMT
+&endDate=Wed%2C%2014%20Nov%202018%2022%3A53%3A08%20GMT
+&period=360
+
+{
+    "destination": "exchange-test",
+    "messagesPublished": [
+        {
+            "date": "2018-11-14T21:59:08.000+0000",
+            "value": 0
+        }
+     ]
+}
+----
+
+この場合の期間は整数です。秒単位のデータポイントの粒度です。
+
+=== 環境別の使用量メトリクス 
+
+統計 API を使用して、特定の組織のすべての環境における Anypoint MQ の使用量を合計できます。これはリアルタイムではなく、遅延があります。
+
+`/environments/ENVIRONMENT_ID?startDate=...&endDate=...&period=...`
+
+*要求と応答のサンプル:*
+
+[source,example,linenums]
+----
+https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID/environments/ENVIRONMENT_ID
+?startDate=Thursday, 8 Nov 2018 04:49:37 GMT
+&endDate=Sun, 11 Nov 2018 04:60:44 GMT
+&period=1day
+
+[
+    {
+        "timestamp": "2018-11-08T00:00Z",
+        "apiRequestCount": 0,
+        "messageReceiptCount": 0,
+        "billableUnitCount": 0,
+        "messageByteCount": 0
+    }
+]
+----
+
+=== 組織別の使用量メトリクス
+
+統計 API を使用して、マスタビジネス組織における Anypoint MQ の使用量を合計できます。
+
+`/organizations/ORGANIZATION_ID?startDate=...&endDate=...&period=...`
+
+*要求と応答のサンプル:*
+
+[source,example,linenums]
+----
+https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID?
+startDate=Thursday, 8 Nov 2018 04:49:37 GMT
+&endDate=Sun, 11 Nov 2018 04:60:44 GMT
+&period=1day
+
+[
+    {
+        "timestamp": "2018-11-08T00:00Z",
+        "apiRequestCount": 0,
+        "messageReceiptCount": 0,
+        "billableUnitCount": 0,
+        "messageByteCount": 0
+    }
+]
+----
+
 [[exstatapi]]
-== 例: MQ Stats API
+=== 例: Anypoint MQ 統計 API
+
+注意: Anypoint MQ 統計 API にアクセスするには、最初に https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/access-management-api/[Anypoint アクセス管理 API] を使用して認証する必要があります。
 
 次の統計が提供されます。
 
-* messagesVisible - キューから取得できるメッセージ数。
-* messagesSent - キューに追加されたメッセージ数。
-* messagesReceived - キューで受信したメッセージ数。
-* messagesAcked - ACK されたメッセージ数。[Anypoint Platform] > [MQ] ユーザインターフェースを使用して削除された
-メッセージも含まれます。
+* `messagesVisible` - キューから取得できるメッセージ数。
+* `messagesSent` - キューに追加されたメッセージ数。
+* `messagesReceived` - キューで受信したメッセージ数。
+* `messagesAcked` - ACK されたメッセージ数。*[Anypoint Platform]* > *[MQ]* ユーザインターフェースを使用して削除されたメッセージも含まれます。
 
 2018 年 7 月 26 日から 7 月 28 日までの統計をリストする要求の例:
 
 [source,json,linenums]
 ----
 curl -X GET \
-'https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID/environments/ENV_ID/regions/us-east-1/queues/randomQueue/?startDate=Thu%2C%2026%20Jul%202018%2000%3A00%3A00%20GMT&endDate=Sat%2C%2028%20Jul%202018%2020%3A00%3A00%20GMT&period=600' \
+'https://anypoint.mulesoft.com/mq/stats/api/v1/organizations/ORGANIZATION_ID/environments/ENVIRONMENT_ID/regions/REGION_URL/queues/randomQueue/?startDate=Thu%2C%2026%20Jul%202018%2000%3A00%3A00%20GMT&endDate=Sat%2C%2028%20Jul%202018%2020%3A00%3A00%20GMT&period=600' \
   -H 'authorization: Bearer BEARER_TOKEN' \
   -H 'cache-control: no-cache' \
   -H 'postman-token: ACCESS_TOKEN'
@@ -325,14 +473,14 @@ Anypoint Platform アカウントにアクセスする
 ----
 username="<anypoint_platform_username>"
 password="<anypoint_platform_password>"
-organizationID="<organization_ID>"
+organizationID="ORGANIZATION_ID"
 environmentID {
-    development="<development_environment_ID>"
-    qa="<qa_environment_ID>"
-    staging="<staging_environment_ID>"
-    production="<production_environment_ID>"
+    development="DEVELOPMENT_ENVIRONMENT_ID"
+    qa="QA_ENVIRONMENT_ID"
+    staging="STAGING_ENVIRONMENT_ID"
+    production="PRODUCTION_ENVIRONMENT_ID"
 }
-regionID="us-east-1"
+regionID="REGION_URL"
 
 queues=[
     "Queue1",
@@ -347,7 +495,7 @@ exchanges=[
 ]
 ----
 
-MQ と FIFO を使用可能なリージョンについては、xref:mq-faq.adoc[「MQ FAQ」]を参照してください。
+Anypoint MQ と FIFO を使用可能なリージョンについては、xref:mq-faq.adoc[「MQ FAQ」]を参照してください。
 
 === スクリプトファイルの作成
 
@@ -382,9 +530,9 @@ class AnypointMQAdminClient {
             props = new ConfigSlurper().parse(new File("cloudhub.properties").toURI().toURL())
         }
 
-        def envID = props.environmentID.production
+        def ENVIRONMENT_ID = props.environmentID.production
         def token = authenticate(props.username, props.password)
-        retrieveDestinations(props, token, envID)
+        retrieveDestinations(props, token, ENVIRONMENT_ID)
     }
 
     static authenticate(String username, String password) {
@@ -409,7 +557,7 @@ class AnypointMQAdminClient {
         // read and print response
         def bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
         def jsonResponse = bufferedReader.getText()
-        println "response: \n" + jsonResponse
+        println "Response: \n" + jsonResponse
 
         // parse and return token
         def slurper = new JsonSlurper()
@@ -418,14 +566,14 @@ class AnypointMQAdminClient {
         return resultMap["access_token"]
     }
 
-    static retrieveDestinations(ConfigObject props, String token, String envID) {
+    static retrieveDestinations(ConfigObject props, String token, String ENVIRONMENT_ID) {
 
-        def orgID = props.organizationID
-        def regionID = props.regionID
+        def ORGANIZATION_ID = props.organizationID
+        def REGION_URL = props.regionID
 
         // build HTTP GET
-        def getDestinationsURL = HOST + '/mq/admin/api/v1/organizations/' + orgID + 
-          '/environments/' + envID + '/regions/' + regionID + '/destinations'
+        def getDestinationsURL = HOST + '/mq/admin/api/v1/organizations/' + ORGANIZATION_ID + 
+          '/environments/' + ENVIRONMENT_ID + '/regions/' + REGION_URL + '/destinations'
         def getDestinations = new HttpGet(getDestinationsURL)
 
         // set token
@@ -438,17 +586,17 @@ class AnypointMQAdminClient {
         // parse and print results
         def bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
         def jsonResponse = bufferedReader.getText()
-        println "response: \n" + jsonResponse
+        println "Response: \n" + jsonResponse
     }
 
-    static retrieveQueue(ConfigObject props, String token, String envID, String queueID) {
+    static retrieveQueue(ConfigObject props, String token, String ENVIRONMENT_ID, String QUEUE_ID) {
 
-        def orgID = props.organizationID
-        def regionID = props.regionID
+        def ORGANIZATION_ID = props.organizationID
+        def REGION_URL = props.regionID
 
         // build HTTP GET
-        def getQueueURL = HOST + '/mq/admin/api/v1/organizations/' + orgID + '/environments/' + 
-          envID + '/regions/' + regionID + '/destinations/queues/' + queueID
+        def getQueueURL = HOST + '/mq/admin/api/v1/organizations/' + ORGANIZATION_ID + '/environments/' + 
+          ENVIRONMENT_ID + '/regions/' + REGION_URL + '/destinations/queues/' + QUEUE_ID
         def getQueue = new HttpGet(getQueueURL)
 
         // set token
@@ -461,19 +609,19 @@ class AnypointMQAdminClient {
         // parse and print results
         def bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
         def jsonResponse = bufferedReader.getText()
-        println "response: \n" + jsonResponse
+        println "Response: \n" + jsonResponse
     }
 
-    static createQueues(ConfigObject props, String token, String envID) {
+    static createQueues(ConfigObject props, String token, String ENVIRONMENT_ID) {
 
-        def orgID = props.organizationID
-        def regionID = props.regionID
+        def ORGANIZATION_ID = props.organizationID
+        def REGION_URL = props.regionID
         def queues = props.queues
 
-        queues.each { queueID ->
+        queues.each { QUEUE_ID ->
 
-            def putQueueURL = HOST + '/mq/admin/api/v1/organizations/' + orgID + '/environments/' + 
-              envID + '/regions/' + regionID + '/destinations/queues/' + queueID
+            def putQueueURL = HOST + '/mq/admin/api/v1/organizations/' + ORGANIZATION_ID + '/environments/' + 
+              ENVIRONMENT_ID + '/regions/' + REGION_URL + '/destinations/queues/' + QUEUE_ID
             def putQueue = new HttpPut(putQueueURL)
 
             putQueue.addHeader("Content-Type", "application/json")
@@ -493,20 +641,20 @@ class AnypointMQAdminClient {
 
             def bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
             def jsonResponse = bufferedReader.getText()
-            println "response: \n" + jsonResponse
+            println "Response: \n" + jsonResponse
         }
     }
 
-    static createExchanges(ConfigObject props, String token, String envID) {
+    static createExchanges(ConfigObject props, String token, String ENVIRONMENT_ID) {
 
-        def orgID = props.organizationID
-        def regionID = props.regionID
+        def ORGANIZATION_ID = props.organizationID
+        def REGION_URL = props.regionID
 
         def exchanges = props.exchanges
 
         exchanges.each { exchangeID ->
 
-            def putExchangeURL = HOST + '/mq/admin/api/v1/organizations/' + orgID + '/environments/' + envID + '/regions/' + regionID + '/destinations/exchanges/' + exchangeID
+            def putExchangeURL = HOST + '/mq/admin/api/v1/organizations/' + ORGANIZATION_ID + '/environments/' + ENVIRONMENT_ID + '/regions/' + REGION_URL + '/destinations/exchanges/' + EXCHANGE_ID
             def putExchange = new HttpPut(putExchangeURL)
 
             putExchange.addHeader("Content-Type", "application/json")
@@ -523,7 +671,7 @@ class AnypointMQAdminClient {
 
             def bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
             def jsonResponse = bufferedReader.getText()
-            println "response: \n" + jsonResponse
+            println "Response: \n" + jsonResponse
         }
     }
 }
@@ -533,7 +681,7 @@ class AnypointMQAdminClient {
 == 例: Broker API でのメッセージのパブリッシュ
 
 この例では、curl を使用してコマンドラインから Anypoint MQ をテストできます。
-この例は、https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-broker/[MQ Broker API] を使用してメッセージをパブリッシュおよびコンシュームします。プレースホルダ文字列 `42544254-4254-4254-4254-425442544254` を認証およびトークン文字列の適切な値で置き換える必要があります。これらの例では、Postman を使用してキューにアクセスします。
+この例は、&#8203;https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/anypoint-mq-broker/[MQ ブローカー API] を使用してメッセージをパブリッシュおよびコンシュームします。プレースホルダ文字列 `42544254-4254-4254-4254-425442544254` を認証およびトークン文字列の適切な値で置き換える必要があります。これらの例では、Postman を使用してキューにアクセスします。
 
 次の *curl* コマンドはメッセージをパブリッシュします。
 
@@ -564,7 +712,7 @@ curl -X GET -H "Authorization: bearer 42544254-4254-4254-4254-425442544254" \
 "https://mq-us-east-1.anypoint.mulesoft.com/api/v1/organizations/42544254-4254-4254-4254-425442544254/environments/42544254-4254-4254-4254-425442544254/destinations/postmanQueue/messages?pollingTime=10000&batchSize=1&lockTtl=10000"
 ----
 
-MQ と FIFO を使用可能なリージョンについては、xref:mq-faq.adoc[「MQ FAQ」]を参照してください。
+Anypoint MQ と FIFO を使用可能なリージョンについては、xref:mq-faq.adoc[「MQ FAQ」]を参照してください。
 
 [[expostbro]]
 == 例: Postman、Studio、ブラウザ
@@ -578,18 +726,18 @@ MQ と FIFO を使用可能なリージョンについては、xref:mq-faq.adoc[
 * <<browsersetup,ブラウザ>>
 
 [[postsetup]]
-==== Postman のセットアップ
+=== Postman のセットアップ
 
 https://www.getpostman.com/[Postman] アプリケーションは、Anypoint MQ API にアクセスするプラットフォームを提供します。
 Postman をダウンロードしてインストールしたら、次の情報を指定して環境を作成します。
 
-* 組織 ID
-* 環境 ID
+* ORGANIZATION_ID
+* ENVIRONMENT_ID
 * ベアラー (認証) トークン
 * ホスト ID (Anypoint Platform/MQ から)
 * クライアント ID (Anypoint Platform/MQ から)
 * クライアントシークレット (Anypoint Platform/MQ から)
-* キュー名 - Postman で設定可能
+* キュー名 - Postman でこのキュー名を設定可能
 
 Anypoint MQ API へのアクセスを許可したら、メッセージをパブリッシュしたり、メッセージをコンシュームしたり、返された body の情報からロック ID を取得したりします。
 
@@ -621,21 +769,24 @@ Anypoint Studio では、Anypoint MQ コネクタを使用する Mule アプリ�
 
 次の要素で Studio プロジェクトをセットアップできます。
 
-* HTTP コネクタ: ホスト 0.0.0.0、ポート 8081、およびプロパティメニューでパスを `/mq/{messageId}` 値に設定。
-* Anypoint MQ コネクタ: [Anypoint Platform] > [MQ] からクライアント ID とシークレットを取得し、[宛先] を Postman で作成されたキューに設定。
-* ロガー: [Message (メッセージ)] を `#[payload]` 値に設定。
+* HTTP コネクタ: 
+  ** ホスト: `0.0.0.0`
+  ** ポート: `8081`
+  ** パス: プロパティメニューで `/mq/{messageId}` に設定。
+* Anypoint MQ コネクタ: *[Anypoint Platform]* > *[MQ]* からクライアント ID とクライアントシークレットを取得し、*[宛先]* を Postman で作成されたキューに設定。
+* ロガー: *[Message (メッセージ)]* を値 `#[payload]` に設定。
 
-Package Explorer ウィンドウでプロジェクト名を右クリックし、*[Run As (別のユーザとして実行)]* > *[Mule Application (Mule アプリケーション)]* をクリックします。
+*Package Explorer* ウィンドウでプロジェクト名を右クリックし、*[Run As (別のユーザとして実行)]* > *[Mule Application (Mule アプリケーション)]* をクリックします。
 
-コンソールメッセージが「DEPLOYED (デプロイ済み)」値で終わっていることを確認します。
+コンソールメッセージが値 `DEPLOYED` で終わっていることを確認します。
 
 Postman に戻って新しいメッセージをパブリッシュします。
 
 [[browsersetup]]
 ==== ブラウザアクセス
 
-Studio で [HTTP Listener (HTTP リスナ)] をセットアップしたら、アドレス +0.0.0.0:8081+ をブラウズします。ブラウザに、Postman によって送信されたメッセージが表示されます。このメッセージは Anypoint MQ コネクタが受信し、HTTP コネクタがブラウザに送信したメッセージです。
+Studio で [HTTP Listener (HTTP リスナ)] をセットアップしたら、アドレス `0.0.0.0:8081` をブラウズします。ブラウザに、Postman によって送信されたメッセージが表示されます。このメッセージは Anypoint MQ コネクタが受信し、HTTP コネクタがブラウザに送信したメッセージです。
 
 == 関連情報
 
-* xref:mq-faq.adoc[MQ FAQ]
+* xref:mq-faq.adoc[Anypoint MQ FAQ]

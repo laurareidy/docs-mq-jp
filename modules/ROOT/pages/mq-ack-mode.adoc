@@ -2,24 +2,25 @@
 ifndef::env-site,env-github[]
 include::_attributes.adoc[]
 endif::[]
+:imagesdir: ../assets/images/
 
-IMPORTANT:このガイドは Mule 3 および Studio 6 にのみ適用されます。Mule 4 の肯定応答情報については、xref:connectors::anypoint-mq/anypoint-mq-ack.adoc[「メッセージ肯定応答」]を参照してください。
+IMPORTANT:  このガイドは Mule 3 および Studio 6 にのみ適用されます。Mule 4 の肯定応答情報については、xref:connectors::anypoint-mq/3.x/anypoint-mq-ack.adoc[「ACK 操作と NACK 操作」]を参照してください。
+
 
 Anypoint MQ では、Anypoint MQ コネクタを使用して Anypoint Studio でメッセージを処理する方法を決定できます。
 
 次の 2 つの応答が発生する可能性があります。
 
-* *肯定応答* (ack) - アプリケーションがメッセージを受信したことを示します。
-* *否定応答* (nack) - アプリケーションが現在のメッセージを
-拒否することを示します。MQ は、別のアプリケーションがメッセージを
-受信できるように、キューにメッセージを返します。
+* 肯定応答 (ack) - アプリケーションがメッセージを受信したことを示します。
+* 否定応答 (nack) - アプリケーションが現在のメッセージを拒否することを示します。Anypoint MQ は、別のアプリケーションがメッセージを受信できるように、キューにメッセージを返します。
 
 Anypoint MQ コネクタには、Studio アプリケーションでこれらの状態をグローバルまたはローカルに設定するためのツールが用意されています。
 
-*注意:*
-
-* Mule 4 Anypoint MQ コネクタでは、Ack および Nack コンポーネントを使用するときに、AnypointMQMessageContext オブジェクトを渡す必要があります。このオブジェクトは、サブスクライバまたはコンシューマコンポーネントに対する MQ コネクタ属性内にあります。サブスクライバまたはコンシューマに続く Ack または Nack コンポーネントに `#[attributes]` を挿入すると、MQ コネクタは自動的に AnypointMQMessageContext オブジェクトを渡します。
+[NOTE]
+====
+* Anypoint MQ コネクタ - Mule 4 コネクタでは、Ack および Nack コンポーネントを使用するときに、AnypointMQMessageContext オブジェクトを渡す必要があります。このオブジェクトは、サブスクライバまたはコンシューマコンポーネントに対する Anypoint MQ コネクタ属性内にあります。サブスクライバまたはコンシューマに続く Ack または Nack コンポーネントに `#[attributes]` を挿入すると、Anypoint MQ コネクタは自動的に AnypointMQMessageContext オブジェクトを渡します。
 * 他の操作によって `#[attributes]` が新しい値で上書きされる可能性があるため、サブスクライバまたはコンシューマと Ack/Nack 間のフローにそのような演算子が存在する場合は、サブスクライバまたはコンシューマの属性を変数に保存して属性が失われないようにします。
+====
 
 フローの例:
 
@@ -38,9 +39,9 @@ Anypoint MQ コネクタは、Studioアプリケーションがキューから�
 
 === グローバル状態
 
-Studio の [Global Element Properties (グローバル要素のプロパティ)] メニューを使用して、フロー内のすべてのメッセージを処理する戦略を指定できます。グローバル状態には次の選択肢があります。
+Studio の *[Global Element Properties (グローバル要素のプロパティ)]* メニューを使用して、フロー内のすべてのメッセージを処理する戦略を指定できます。グローバル状態には次の選択肢があります。
 
-* *AUTO (自動)* - Anypoint MQ コネクタは、例外のキャッチ戦略 (ACK) と例外のロールバック戦略 (NACK) のどちらを検出したかに応じて、フローの最後に Ack または Nack を自動的に送信します。<<autoflow,Anypoint Studio での自動肯定応答フローの作成>>の例を参照してください。[AUTO (自動)] は Mule 4 コネクタのデフォルトです。
+* *AUTO (自動)* - Anypoint MQ コネクタは、例外のキャッチ戦略 (ACK) と例外のロールバック戦略 (NACK) のどちらを検出したかに応じて、フローの最後に Ack または Nack を自動的に送信します。<<autoflow,「Anypoint Studio での自動肯定応答フローの作成」>>の例を参照してください。[AUTO (自動)] は Mule 4 コネクタのデフォルトです。
 +
 考えられる結果は 2 つあります。
 +
@@ -63,8 +64,11 @@ Studio の [Global Element Properties (グローバル要素のプロパティ)]
 </rollback-exception-strategy>
 ----
 +
-* *MANUAL (手動)* - アプリケーションは Anypoint MQ コネクタのローカル状態を使用して独自の Ack または Nack を送信することを示します。MQ コネクタはアクションを自動的に提供しません。<<manualflow,Anypoint Studio での手動肯定応答フローの作成>>の例を参照してください。
-* *NONE (なし)* - アプリケーションがメッセージを受信し、MQ コネクタはそのメッセージをすぐに肯定応答して削除します。この状態は、メッセージが適切に使用されない場合はメッセージが失われるリスクがありますが、通常は、後続の各メッセージがその前のメッセージに関する詳細を提供するニュースフィードなど、メッセージを常に更新するフローがある場合に使用されます。この状態はリスクがありますが、コーディングが簡単です。<<noneflow,[NONE (なし)] 肯定応答モードの設定>>の例を参照してください。*注意:* Mule 4 MQ では、[NONE (なし)] は [IMMEDIATE (即時)] と呼ばれますが、機能は同じです。
+* *MANUAL (手動)* - アプリケーションは Anypoint MQ コネクタのローカル状態を使用して独自の Ack または Nack を送信することを示します。Anypoint MQ コネクタはアクションを自動的に提供しません。<<manualflow,「Anypoint Studio での手動肯定応答フローの作成」>>の例を参照してください。
+* *NONE (なし)* - アプリケーションがメッセージを受信し、Anypoint MQ コネクタはそのメッセージをすぐに肯定応答して削除します。この状態は、メッセージが適切に使用されない場合はメッセージが失われるリスクがありますが、通常は、後続の各メッセージがその前のメッセージに関する詳細を提供するニュースフィードなど、メッセージを常に更新するフローがある場合に使用されます。この状態はリスクがありますが、コーディングが簡単です。<<noneflow,「[NONE (なし)] 肯定応答モードの設定」>>の例を参照してください。
++
+[NOTE]
+Anypoint MQ Mule コネクタ - Mule 4 では、[NONE (なし)] は [IMMEDIATE (即時)] と呼ばれますが、機能は同じです。
 +
 グローバル状態は *[Acknowledgment Mode (肯定応答モード)]* 項目で設定できます。
 +
@@ -92,7 +96,7 @@ image::mq-ack-flow.png[MQ 肯定応答モードのフロー]
 * *autoHttp* - `0.0.0.0:8081` でリスンする HTTP コネクタをセットアップし、メッセージをパブリッシュするように Anypoint MQ コネクタを設定し、肯定応答モードを *[AUTO (自動)]* に設定します。
 * *autoMq* - メッセージをコンシュームするように Anypoint MQ コネクタを設定し、Java クラス <<randomerror,RandomError>> を使用して、選択に応じて自動機能が肯定応答または否定応答を送信するための考えられる例外を作成します。ロガーは、コンソールに ACK または NACK の選択を表示します。
 +
-フローの [Error handling (エラー処理)] セクションには、MQ コネクタが ACK を送信する [Catch Exception Strategy (例外のキャッチ戦略)]、および MQ コネクタが NACK を送信する [Rollback Exception Strategy (例外のロールバック戦略)] が含まれます。
+フローの [Error handling (エラー処理)] セクションには、Anypoint MQ コネクタが ACK を送信する [Catch Exception Strategy (例外のキャッチ戦略)]、および Anypoint MQ コネクタが NACK を送信する [Rollback Exception Strategy (例外のロールバック戦略)] が含まれます。
 
 === [AUTO (自動)] の XML コード
 
@@ -101,57 +105,57 @@ image::mq-ack-flow.png[MQ 肯定応答モードのフロー]
 [source,xml,linenums]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" 
-xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" 
-xmlns:context="http://www.springframework.org/schema/context" 
-xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" 
-xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" 
-xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
-xmlns="http://www.mulesoft.org/schema/mule/core" 
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata"
+xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+xmlns="http://www.mulesoft.org/schema/mule/core"
 xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core 
+http://www.mulesoft.org/schema/mule/core
 http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking 
+http://www.mulesoft.org/schema/mule/ee/tracking
 http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
-http://www.mulesoft.org/schema/mule/ee/dw 
+http://www.mulesoft.org/schema/mule/ee/dw
 http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-current.xsd
-http://www.mulesoft.org/schema/mule/anypoint-mq 
+http://www.mulesoft.org/schema/mule/anypoint-mq
 http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd
-http://www.mulesoft.org/schema/mule/http 
+http://www.mulesoft.org/schema/mule/http
 http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 
     <context:property-placeholder location="ackmodes.properties"/>
 
-    <anypoint-mq:config name="Anypoint_MQ_Configuration" 
+    <anypoint-mq:config name="Anypoint_MQ_Configuration"
     doc:name="Anypoint MQ Configuration">
-        <anypoint-mq:provider 
-        url="https://mq-us-east-1.anypoint.mulesoft.com/api/v1" 
+        <anypoint-mq:provider
+        url="https://mq-us-east-1.anypoint.mulesoft.com/api/v1"
         clientId="${mq.clientId}" clientSecret="${mq.clientSecret}"/>
     </anypoint-mq:config>
 
-    <http:listener-config name="HTTP_Listener_Configuration" 
+    <http:listener-config name="HTTP_Listener_Configuration"
     host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
 
     <flow name="autoHttp">
-        <http:listener config-ref="HTTP_Listener_Configuration" 
+        <http:listener config-ref="HTTP_Listener_Configuration"
         path="/" doc:name="HTTP"/>
-        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration" 
+        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration"
         destination="auto" doc:name="Anypoint MQ"/>
     </flow>
 
     <flow name="autoMq">
-        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration" 
+        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration"
         destination="auto" doc:name="Anypoint MQ" pollingTime="10000"/>
         <component class="ackmodes.RandomError" doc:name="Java"/>
         <logger level="ERROR" doc:name="Logger" message="Will ACK"/>
         <choice-exception-strategy doc:name="holaChoice_Exception_Strategy">
-            <catch-exception-strategy doc:name="Catch Exception Strategy" 
+            <catch-exception-strategy doc:name="Catch Exception Strategy"
             when="exception.causedBy(UnsupportedOperationException)">
                 <logger message="Will ACK" level="ERROR" doc:name="Logger"/>
             </catch-exception-strategy>
@@ -166,7 +170,7 @@ http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 
 [NOTE]
 ====
-プロパティファイルでクライアント ID (mq.clientId) とクライアントシークレット (mq.clientSecret) の値を設定していることを確認します。この場合、それらの値は /ackmodes/classes/ackmodes.properties ファイルで設定され、次の内容が含まれています。
+プロパティファイルでクライアント ID (`mq.clientId`) とクライアントシークレット (`mq.clientSecret`) の値を設定していることを確認します。この場合、それらの値は `/ackmodes/classes/ackmodes.properties` ファイルで設定され、次の内容が含まれています。
 
 [source,text,linenums]
 ----
@@ -177,7 +181,7 @@ mq.clientSecret=<Client_Secret>
 ----
 ====
 
-このステートメントでコールされる Java テストプログラムを使用して例外を発生させる方法についての説明は、<<randomerror,ランダムエラージェネレータ>>を参照してください。
+このステートメントでコールされる Java テストプログラムを使用して例外を発生させる方法についての説明は、<<randomerror,「ランダムエラージェネレータ」>>を参照してください。
 
 [source,xml]
 ----
@@ -187,11 +191,11 @@ mq.clientSecret=<Client_Secret>
 [[manualflow]]
 == Anypoint Studio での [MANUAL (手動)] 肯定応答フローの作成
 
-[MANUAL (手動)] 肯定応答モードは、Anypoint MQ コネクタの [Global Element Properties (グローバル要素のプロパティ)] から設定できます。
+Studio の [MANUAL (手動)] 肯定応答モードは、Anypoint MQ コネクタの [Global Element Properties (グローバル要素のプロパティ)] から設定できます。
 
 image::mq-global-mode-set.png[]
 
-[MANUAL (手動)] フローでも、choice-exception-strategy がフローで同様に設定されます。この場合、アプリケーションは<<randomerror,ランダムエラー Java クラス>>で送信された例外に応じて、操作が Ack または Nack に設定された個々の Anypoint MQ コネクタインスタンスを使用します。
+[MANUAL (手動)] フローでも、`choice-exception-strategy` がフローで同様に設定されます。この場合、アプリケーションは<<randomerror,「ランダムエラー Java クラス」>>で送信する例外に応じて、操作が Ack または Nack に設定された個々の Anypoint MQ コネクタインスタンスを使用します。
 
 image::mq-manual-flow.png[]
 
@@ -202,59 +206,59 @@ image::mq-manual-flow.png[]
 [source,xml,linenums]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" 
-xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" 
-xmlns:context="http://www.springframework.org/schema/context" 
-xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" 
-xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" 
-xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
-xmlns="http://www.mulesoft.org/schema/mule/core" 
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata"
+xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+xmlns="http://www.mulesoft.org/schema/mule/core"
 xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core 
+http://www.mulesoft.org/schema/mule/core
 http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking 
+http://www.mulesoft.org/schema/mule/ee/tracking
 http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
-http://www.mulesoft.org/schema/mule/ee/dw 
+http://www.mulesoft.org/schema/mule/ee/dw
 http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-current.xsd
-http://www.mulesoft.org/schema/mule/anypoint-mq 
+http://www.mulesoft.org/schema/mule/anypoint-mq
 http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd
-http://www.mulesoft.org/schema/mule/http 
+http://www.mulesoft.org/schema/mule/http
 http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 
-    <http:listener-config name="HTTP_Listener_Configuration_manual" 
+    <http:listener-config name="HTTP_Listener_Configuration_manual"
     host="0.0.0.0" port="8082" doc:name="HTTP Listener Configuration"/>
 
     <flow name="manualHttp">
-        <http:listener config-ref="HTTP_Listener_Configuration_manual" 
+        <http:listener config-ref="HTTP_Listener_Configuration_manual"
         path="/" doc:name="HTTP"/>
-        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration" 
+        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration"
         destination="manual" doc:name="Anypoint MQ"/>
     </flow>
 
     <flow name="manualMq">
-        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration" 
-        destination="manual" doc:name="Anypoint MQ" pollingTime="10000" 
+        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration"
+        destination="manual" doc:name="Anypoint MQ" pollingTime="10000"
         AcknowledgmentMode="MANUAL"/>
         <component class="ackmodes.RandomError" doc:name="Java"/>
         <logger level="ERROR" doc:name="Logger" message="Will ACK"/>
-        <anypoint-mq:ack config-ref="Anypoint_MQ_Configuration" 
+        <anypoint-mq:ack config-ref="Anypoint_MQ_Configuration"
         doc:name="Anypoint MQ"/>
         <choice-exception-strategy doc:name="holaChoice_Exception_Strategy">
-            <catch-exception-strategy doc:name="Catch Exception Strategy" 
+            <catch-exception-strategy doc:name="Catch Exception Strategy"
             when="exception.causedBy(UnsupportedOperationException)">
                 <logger message="Will ACK" level="ERROR" doc:name="Logger"/>
-                <anypoint-mq:ack config-ref="Anypoint_MQ_Configuration" 
+                <anypoint-mq:ack config-ref="Anypoint_MQ_Configuration"
                 doc:name="Anypoint MQ"/>
             </catch-exception-strategy>
             <catch-exception-strategy doc:name="Rollback Exception Strategy">
                 <logger message="Will NACK" level="ERROR" doc:name="Logger"/>
-                <anypoint-mq:nack config-ref="Anypoint_MQ_Configuration" 
+                <anypoint-mq:nack config-ref="Anypoint_MQ_Configuration"
                 doc:name="Anypoint MQ"/>
             </catch-exception-strategy>
         </choice-exception-strategy>
@@ -263,7 +267,7 @@ http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 </mule>
 ----
 
-このステートメントでコールされる Java テストプログラムを使用して例外を発生させる方法についての説明は、<<randomerror,ランダムエラージェネレータ>>を参照してください。
+このステートメントでコールされる Java テストプログラムを使用して例外を発生させる方法についての説明は、<<randomerror,「ランダムエラージェネレータ」>>を参照してください。
 
 [source,xml]
 ----
@@ -273,19 +277,21 @@ http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 [[noneflow]]
 == [NONE (なし)] 肯定応答モードの設定
 
-[None (なし)] 肯定応答モードは、Anypoint MQ コネクタの [Global Element Properties (グローバル要素のプロパティ)] から設定できます。
+Anypoint MQ コネクタの Studio の *[Global Element Properties (グローバル要素のプロパティ)]* メニューで *[Acknowledgment Mode (肯定応答モード)]* を *[NONE (なし)]* に設定できます。
 
 image::mq-global-mode-set.png[]
 
-[NONE (なし)] フローでは、何が発生した場合でも、Anypoint MQ コネクタが常に ACK を送信します。
-*注意:* [NONE (なし)] は Mule 4 Anypoint MQ では [IMMEDIATE (即時)] と呼ばれますが、機能は同じです。
+*[NONE (なし)]* フローでは、何が発生した場合でも、Anypoint MQ コネクタが常に ACK を送信します。
+
+[NOTE]
+*[NONE (なし)]* は Anypoint MQ コネクタ - Mule 4 では *[IMMEDIATE (即時)]* と呼ばれますが、機能は同じです。
 
 次の例は、Java クラス <<randomerror,RandomError>> を使用して考えられる例外を作成することでこのリスクを強調しますが、それらの例外は無視して ACK を送信します。
 
 [source,xml,linenums]
 ----
 <component class="ackmodes.RandomError" doc:name="Java"/>
-<logger level="ERROR" doc:name="Logger" 
+<logger level="ERROR" doc:name="Logger"
 message="Always ACKs as soon as a message is received"/>
 ----
 
@@ -295,53 +301,53 @@ image::mq-none-flow.png[]
 
 === [NONE (なし)] の XML コード
 
-[NONE (なし)] 肯定応答モードの XML コードは次のとおりです。
+*[NONE (なし)]* 肯定応答モードの XML コードは次のとおりです。
 
 [source,xml,linenums]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" 
-xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" 
-xmlns:context="http://www.springframework.org/schema/context" 
-xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" 
-xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" 
-xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
-xmlns="http://www.mulesoft.org/schema/mule/core" 
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata"
+xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+xmlns="http://www.mulesoft.org/schema/mule/core"
 xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core 
+http://www.mulesoft.org/schema/mule/core
 http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking 
+http://www.mulesoft.org/schema/mule/ee/tracking
 http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
-http://www.mulesoft.org/schema/mule/ee/dw 
+http://www.mulesoft.org/schema/mule/ee/dw
 http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-current.xsd
-http://www.mulesoft.org/schema/mule/anypoint-mq 
+http://www.mulesoft.org/schema/mule/anypoint-mq
 http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd
-http://www.mulesoft.org/schema/mule/http 
+http://www.mulesoft.org/schema/mule/http
 http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 
-    <http:listener-config name="HTTP_Listener_Configuration_none" 
+    <http:listener-config name="HTTP_Listener_Configuration_none"
     host="0.0.0.0" port="8083" doc:name="HTTP Listener Configuration"/>
 
     <flow name="noneHttp">
-        <http:listener config-ref="HTTP_Listener_Configuration_none" 
+        <http:listener config-ref="HTTP_Listener_Configuration_none"
         path="/" doc:name="HTTP"/>
-        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration" 
+        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration"
         destination="none" doc:name="Anypoint MQ"/>
     </flow>
 
     <flow name="noneMq">
-        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration" 
-        destination="none" doc:name="Anypoint MQ" 
-        pollingTime="10000" 
+        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration"
+        destination="none" doc:name="Anypoint MQ"
+        pollingTime="10000"
         AcknowledgmentMode="NONE"/>
         <component class="ackmodes.RandomError" doc:name="Java"/>
-        <logger level="ERROR" doc:name="Logger" 
+        <logger level="ERROR" doc:name="Logger"
         message="Always ACKs as soon as a message is received"/>
     </flow>
 
@@ -388,4 +394,4 @@ public class RandomError implements Callable {
 
 == 関連情報
 
-* xref:mq-faq.adoc[MQ FAQ]
+* xref:mq-faq.adoc[Anypoint MQ FAQ]
